@@ -9,6 +9,24 @@ open or closed and estimates remaining closure time using Google-Routes-like
 traffic signals, queue behavior, historical patterns, and reputation-weighted
 community reports.
 
+## Final product boundary
+
+The main product is intentionally narrow:
+
+1. Display an actual Google Map.
+2. Overlay railway-crossing coordinates sourced from OpenStreetMap and verified
+   before production use.
+3. Run the RailCross model for a selected crossing.
+4. Show `OPEN` or `CLOSED`, closure probability, and estimated reopening time
+   when the marker is clicked or hovered.
+
+Nearby-user confirmation is a proposed future data source. It is displayed as
+a roadmap idea and is not represented as an implemented or validated feature.
+
+Google Places does not currently expose a dedicated level-crossing place type,
+so the pilot marker layer uses deduplicated OpenStreetMap
+`railway=level_crossing` nodes on top of Google Maps.
+
 ## What this prototype demonstrates
 
 - A map-first route-planning interface with a Google Maps-like interaction model
@@ -26,12 +44,24 @@ railway or Google traffic data.
 ```bash
 python -m ml.simulate_crossings
 python -m ml.train_models
+python -m ml.export_map_demo
 python -m ml.build_notebook
 ```
 
 The synthetic schema mirrors public traffic-aware route concepts such as
 static duration, traffic-aware duration, and `NORMAL`/`SLOW`/`TRAFFIC_JAM`
 segments. It does not reproduce or claim access to Google's internal data.
+
+## Actual Google Maps setup
+
+1. Create a Google Cloud API key.
+2. Enable the Maps JavaScript API.
+3. Restrict the key to the website domain and the Maps JavaScript API.
+4. Copy `.env.example` to `.env.local` and set `GOOGLE_MAPS_API_KEY`.
+5. Run `npm run dev`.
+
+The committed source contains no Google credential. Without a key, the app
+shows a setup screen while preserving the already-published version.
 
 Artifacts:
 
