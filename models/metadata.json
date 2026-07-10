@@ -1,0 +1,89 @@
+{
+  "generated_at_utc": "2026-07-10T18:58:25.791619+00:00",
+  "dataset": {
+    "path": "data/synthetic/crossing_observations.csv",
+    "source": "Google-Routes-like synthetic simulator; not Google internal data",
+    "rows": 29900,
+    "events": 650,
+    "positive_rate": 0.2386,
+    "split": "Chronological event split: 70% train, 15% validation, 15% test"
+  },
+  "classifier": {
+    "model": "HistGradientBoostingClassifier",
+    "threshold": 0.79,
+    "test_metrics": {
+      "accuracy": 0.974,
+      "precision": 0.9489,
+      "recall": 0.9389,
+      "f1": 0.9439,
+      "roc_auc": 0.9963,
+      "false_positive_rate": 0.0153,
+      "confusion_matrix": [
+        [
+          3407,
+          53
+        ],
+        [
+          64,
+          984
+        ]
+      ]
+    },
+    "event_detection": {
+      "closure_events": 66,
+      "missed_event_rate": 0.0,
+      "median_detection_delay_seconds": 0.0,
+      "p90_detection_delay_seconds": 15.0
+    },
+    "top_permutation_features": [
+      [
+        "queue_growth_vehicles_per_minute",
+        0.247
+      ],
+      [
+        "train_proximity_signal",
+        0.2074
+      ],
+      [
+        "queue_a_vehicles",
+        0.15481
+      ],
+      [
+        "queue_b_vehicles",
+        0.10993
+      ],
+      [
+        "community_open_weight",
+        0.08974
+      ],
+      [
+        "congestion_age_minutes",
+        0.05703
+      ],
+      [
+        "community_closed_weight",
+        0.02141
+      ],
+      [
+        "jam_segment_length_meters",
+        0.01619
+      ]
+    ]
+  },
+  "baseline_rule": {
+    "accuracy": 0.8103,
+    "precision": 0.6299,
+    "recall": 0.4466,
+    "f1": 0.5226,
+    "false_positive_rate": 0.0795
+  },
+  "reopening_regressor": {
+    "model": "HistGradientBoostingRegressor",
+    "test_metrics": {
+      "mae_minutes": 1.68,
+      "median_absolute_error_minutes": 1.474,
+      "within_2_minutes": 0.6594
+    }
+  },
+  "resume_claim_status": "Synthetic benchmark only. Real-world accuracy must be measured on independently labelled crossing events before external accuracy claims."
+}
