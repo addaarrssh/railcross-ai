@@ -11,11 +11,13 @@ from typing import Any
 
 import joblib
 import numpy as np
-from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor
+from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import (
     accuracy_score,
     confusion_matrix,
     f1_score,
+    average_precision_score,
+    brier_score_loss,
     mean_absolute_error,
     precision_score,
     recall_score,
@@ -25,12 +27,13 @@ from sklearn.metrics import (
 from ml.simulate_crossings import FEATURE_COLUMNS
 
 
-def load_dataset(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def load_dataset(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     features: list[list[float]] = []
     status_labels: list[int] = []
     remaining_labels: list[float] = []
     event_ids: list[int] = []
     timestamps: list[str] = []
+    scenarios: list[str] = []
     with path.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
             features.append([float(row[column]) for column in FEATURE_COLUMNS])
@@ -38,12 +41,14 @@ def load_dataset(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.nda
             remaining_labels.append(float(row["remaining_closed_seconds"]))
             event_ids.append(int(row["event_id"]))
             timestamps.append(row["timestamp_utc"])
+            scenarios.append(row["scenario_kind"])
     return (
         np.asarray(features, dtype=float),
         np.asarray(status_labels, dtype=int),
         np.asarray(remaining_labels, dtype=float),
         np.asarray(event_ids, dtype=int),
         np.asarray(timestamps),
+        np.asarray(scenarios),
     )
 
 
@@ -89,9 +94,45 @@ def classifier_metrics(y_true: np.ndarray, probabilities: np.ndarray, threshold:
         "recall": round(float(recall_score(y_true, predictions, zero_division=0)), 4),
         "f1": round(float(f1_score(y_true, predictions, zero_division=0)), 4),
         "roc_auc": round(float(roc_auc_score(y_true, probabilities)), 4),
+        "pr_auc": round(float(average_precision_score(y_true, probabilities)), 4),
+        "brier_score": round(float(brier_score_loss(y_true, probabilities)), 4),
         "false_positive_rate": round(false_positive_rate(y_true, predictions), 4),
         "confusion_matrix": matrix.tolist(),
     }
+
+
+def calibration_bins(y_true: np.ndarray, probabilities: np.ndarray, bins: int = 10) -> list[dict[str, float | int]]:
+    """Return reliability-diagram data without adding a plotting dependency to training."""
+    bucket = np.minimum((probabilities * bins).astype(int), bins - 1)
+    result: list[dict[str, float | int]] = []
+    for index in range(bins):
+        mask = bucket == index
+        if not np.any(mask):
+            continue
+        result.append({
+            "bin": index,
+            "count": int(np.sum(mask)),
+            "mean_predicted_probability": round(float(np.mean(probabilities[mask])), 4),
+            "observed_closure_rate": round(float(np.mean(y_true[mask])), 4),
+        })
+    return result
+
+
+def scenario_metrics(
+    y_true: np.ndarray, probabilities: np.ndarray, scenarios: np.ndarray, threshold: float
+) -> dict[str, dict[str, Any]]:
+    """Expose performance on railway closures and every hard-negative scenario."""
+    report: dict[str, dict[str, Any]] = {}
+    for scenario in sorted(set(str(value) for value in scenarios)):
+        mask = scenarios == scenario
+        predictions = (probabilities[mask] >= threshold).astype(int)
+        report[scenario] = {
+            "rows": int(np.sum(mask)),
+            "actual_closure_rate": round(float(np.mean(y_true[mask])), 4),
+            "predicted_closure_rate": round(float(np.mean(predictions)), 4),
+            "false_positive_rate": round(false_positive_rate(y_true[mask], predictions), 4),
+        }
+    return report
 
 
 def event_detection_metrics(
@@ -132,8 +173,9 @@ def train(
     model_dir: Path,
     artifact_dir: Path,
 ) -> dict[str, Any]:
-    X, y_status, y_remaining, event_ids, timestamps = load_dataset(dataset_path)
+    X, y_status, y_remaining, event_ids, timestamps, scenarios = load_dataset(dataset_path)
     train_mask, validation_mask, test_mask = split_masks(event_ids)
+    
     classifier = HistGradientBoostingClassifier(
         learning_rate=0.075,
         max_iter=180,
@@ -145,11 +187,14 @@ def train(
     positive_weight = float(np.sum(train_mask & (y_status == 0)) / max(np.sum(train_mask & (y_status == 1)), 1))
     sample_weight = np.where(y_status[train_mask] == 1, positive_weight, 1.0)
     classifier.fit(X[train_mask], y_status[train_mask], sample_weight=sample_weight)
+    
     validation_probabilities = classifier.predict_proba(X[validation_mask])[:, 1]
     threshold = choose_threshold(y_status[validation_mask], validation_probabilities)
+    
     test_probabilities = classifier.predict_proba(X[test_mask])[:, 1]
     status_metrics = classifier_metrics(y_status[test_mask], test_probabilities, threshold)
     status_predictions = (test_probabilities >= threshold).astype(int)
+    test_scenarios = scenarios[test_mask]
     detection_metrics = event_detection_metrics(
         y_status[test_mask], status_predictions, event_ids[test_mask], timestamps[test_mask]
     )
@@ -159,6 +204,7 @@ def train(
         & (X[test_mask, FEATURE_COLUMNS.index("queue_a_vehicles")] > 5)
         & (X[test_mask, FEATURE_COLUMNS.index("queue_b_vehicles")] > 5)
     ).astype(int)
+    
     baseline_metrics = {
         "accuracy": round(float(accuracy_score(y_status[test_mask], baseline_predictions)), 4),
         "precision": round(float(precision_score(y_status[test_mask], baseline_predictions, zero_division=0)), 4),
@@ -167,10 +213,30 @@ def train(
         "false_positive_rate": round(false_positive_rate(y_status[test_mask], baseline_predictions), 4),
     }
 
+    # Survival Model for Reopening Time
     train_closed = train_mask & (y_status == 1)
     test_closed = test_mask & (y_status == 1)
-    regressor = HistGradientBoostingRegressor(
-        loss="absolute_error",
+    
+    horizons = [30, 60, 90, 120, 180, 240, 300, 360, 480, 600]
+    
+    X_train_closed = X[train_closed]
+    y_train_remaining = y_remaining[train_closed]
+    
+    X_surv_list = []
+    y_surv_list = []
+    for i in range(len(X_train_closed)):
+        for T in horizons:
+            # Concatenate original features with horizon value as a feature
+            feat = np.append(X_train_closed[i], T)
+            # Label = 1 if still closed at T, 0 if reopened by T
+            label = 1 if y_train_remaining[i] > T else 0
+            X_surv_list.append(feat)
+            y_surv_list.append(label)
+            
+    X_surv = np.asarray(X_surv_list)
+    y_surv = np.asarray(y_surv_list)
+    
+    regressor = HistGradientBoostingClassifier(
         learning_rate=0.065,
         max_iter=190,
         max_leaf_nodes=17,
@@ -178,13 +244,51 @@ def train(
         l2_regularization=1.2,
         random_state=42,
     )
-    regressor.fit(X[train_closed], y_remaining[train_closed])
-    remaining_predictions = np.clip(regressor.predict(X[test_closed]), 0, None)
-    absolute_errors = np.abs(y_remaining[test_closed] - remaining_predictions)
+    regressor.fit(X_surv, y_surv)
+
+    # Test predictions using the survival model
+    X_test_closed = X[test_closed]
+    y_test_remaining = y_remaining[test_closed]
+    
+    test_medians = []
+    for x in X_test_closed:
+        batch = np.asarray([np.append(x, T) for T in horizons])
+        # P(still closed)
+        probs = regressor.predict_proba(batch)[:, 1]
+        
+        # Find median (where P still closed drops below 0.5)
+        idx = np.where(probs < 0.5)[0]
+        if len(idx) > 0:
+            k = idx[0]
+            t_prev = horizons[k-1] if k > 0 else 0
+            s_prev = probs[k-1] if k > 0 else 1.0
+            t_next = horizons[k]
+            s_next = probs[k]
+            denom = s_prev - s_next
+            if denom > 0:
+                t_med = t_prev + (t_next - t_prev) * (s_prev - 0.5) / denom
+            else:
+                t_med = t_next
+        else:
+            t_med = 600.0
+        test_medians.append(t_med)
+        
+    test_medians = np.asarray(test_medians)
+    absolute_errors = np.abs(y_test_remaining - test_medians)
+    
+    # Calculate simple calibration metric: mean absolute calibration error at T=180s
+    # actual fraction reopened by 180s vs mean predicted probability of being reopened
+    actual_reopened_180 = (y_test_remaining <= 180).astype(int)
+    batch_180 = np.asarray([np.append(x, 180) for x in X_test_closed])
+    pred_still_closed_180 = regressor.predict_proba(batch_180)[:, 1]
+    pred_reopened_180 = 1.0 - pred_still_closed_180
+    calibration_error_180 = float(np.abs(np.mean(actual_reopened_180) - np.mean(pred_reopened_180)))
+
     reopening_metrics = {
-        "mae_minutes": round(float(mean_absolute_error(y_remaining[test_closed], remaining_predictions) / 60), 3),
+        "mae_minutes": round(float(mean_absolute_error(y_test_remaining, test_medians) / 60), 3),
         "median_absolute_error_minutes": round(float(np.median(absolute_errors) / 60), 3),
         "within_2_minutes": round(float(np.mean(absolute_errors <= 120)), 4),
+        "calibration_error_180s": round(calibration_error_180, 4),
     }
 
     permutation_importance: list[tuple[str, float]] = []
@@ -202,8 +306,9 @@ def train(
     artifact_dir.mkdir(parents=True, exist_ok=True)
     classifier_path = model_dir / "status_classifier.joblib"
     regressor_path = model_dir / "reopening_regressor.joblib"
+    
     joblib.dump({"model": classifier, "feature_columns": FEATURE_COLUMNS, "threshold": threshold}, classifier_path)
-    joblib.dump({"model": regressor, "feature_columns": FEATURE_COLUMNS}, regressor_path)
+    joblib.dump({"model": regressor, "feature_columns": FEATURE_COLUMNS, "horizons": horizons}, regressor_path)
 
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -219,16 +324,20 @@ def train(
             "model": "HistGradientBoostingClassifier",
             "threshold": round(threshold, 3),
             "test_metrics": status_metrics,
+            "calibration_bins": calibration_bins(y_status[test_mask], test_probabilities),
+            "scenario_metrics": scenario_metrics(y_status[test_mask], test_probabilities, test_scenarios, threshold),
+            "ablation_note": "The trained classifier intentionally uses traffic-derived features only. Schedule priors and crowdsourced consensus are independent fusion inputs applied at serving time; they require a labelled real-world evaluation before a comparative ablation is claimed.",
             "event_detection": detection_metrics,
             "top_permutation_features": permutation_importance[:8],
         },
         "baseline_rule": baseline_metrics,
         "reopening_regressor": {
-            "model": "HistGradientBoostingRegressor",
+            "model": "HistGradientBoostingClassifier_Survival",
             "test_metrics": reopening_metrics,
         },
         "resume_claim_status": "Synthetic benchmark only. Real-world accuracy must be measured on independently labelled crossing events before external accuracy claims.",
     }
+    
     report_path = artifact_dir / "model_evaluation.json"
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     (model_dir / "metadata.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -247,4 +356,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

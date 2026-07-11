@@ -1,0 +1,28 @@
+{
+  "name": "Jamshedpur pilot railway crossings",
+  "source": "OpenStreetMap Overpass API",
+  "license": "ODbL",
+  "retrieved_at_utc": "2026-07-10T19:25:33Z",
+  "bbox": [22.74, 86.08, 22.84, 86.22],
+  "notes": "Nearby duplicate rail-track nodes were clustered into one map marker. Barrier metadata is incomplete and must be field-verified before production use.",
+  "crossings": [
+    { "id": "osm-6251365382", "name": "Kadma Gate Crossing", "lat": 22.7957335, "lng": 86.0808195, "barrier": "full", "osm_node_id": 6251365382 },
+    { "id": "osm-566141369", "name": "Kadma Railway Crossing", "lat": 22.7958227, "lng": 86.0845809, "barrier": "unknown", "osm_node_id": 566141369 },
+    { "id": "osm-566141311", "name": "Sonari Link Crossing", "lat": 22.7982711, "lng": 86.0880028, "barrier": "unknown", "osm_node_id": 566141311 },
+    { "id": "osm-4639719728", "name": "North Kadma Crossing", "lat": 22.8086462, "lng": 86.0843012, "barrier": "unknown", "osm_node_id": 4639719728 },
+    { "id": "osm-5065916293", "name": "Inner Circle Railway Crossing", "lat": 22.7965259, "lng": 86.0990086, "barrier": "unknown", "osm_node_id": 5065916293 },
+    { "id": "osm-7013737177", "name": "Bistupur Railway Crossing", "lat": 22.7934493, "lng": 86.1198846, "barrier": "unknown", "osm_node_id": 7013737177 },
+    { "id": "osm-9769289059", "name": "Tatanagar Approach Crossing", "lat": 22.7907927, "lng": 86.1283707, "barrier": "unknown", "osm_node_id": 9769289059 },
+    { "id": "osm-566146244", "name": "South Adityapur Crossing 1", "lat": 22.7491397, "lng": 86.2008327, "barrier": "unknown", "osm_node_id": 566146244 },
+    { "id": "osm-7141152260", "name": "South Adityapur Crossing 2", "lat": 22.7516347, "lng": 86.2030683, "barrier": "unknown", "osm_node_id": 7141152260 },
+    { "id": "osm-9273072159", "name": "South Adityapur Crossing 3", "lat": 22.7527714, "lng": 86.2042061, "barrier": "unknown", "osm_node_id": 9273072159 },
+    { "id": "osm-566146540", "name": "Adityapur Industrial Crossing", "lat": 22.7575076, "lng": 86.2089924, "barrier": "unknown", "osm_node_id": 566146540 },
+    { "id": "osm-9433935073", "name": "Adityapur Full Gate Crossing", "lat": 22.7644456, "lng": 86.2074484, "barrier": "full", "osm_node_id": 9433935073 },
+    { "id": "osm-566150089", "name": "Gamharia Railway Crossing", "lat": 22.7806416, "lng": 86.1848630, "barrier": "unknown", "osm_node_id": 566150089 },
+    { "id": "osm-6251366468", "name": "Gamharia Link Crossing", "lat": 22.7742934, "lng": 86.1941732, "barrier": "unknown", "osm_node_id": 6251366468 },
+    { "id": "osm-7141201797", "name": "Gamharia North Crossing", "lat": 22.7836262, "lng": 86.1976832, "barrier": "unknown", "osm_node_id": 7141201797 },
+    { "id": "osm-9417063728", "name": "Gamharia Ungated Crossing", "lat": 22.7894105, "lng": 86.1876033, "barrier": "no", "osm_node_id": 9417063728 },
+    { "id": "osm-9417063757", "name": "Gamharia East Crossing", "lat": 22.7942202, "lng": 86.1900857, "barrier": "unknown", "osm_node_id": 9417063757 },
+    { "id": "osm-5578326000", "name": "Adityapur North Crossing", "lat": 22.7957210, "lng": 86.2006416, "barrier": "unknown", "osm_node_id": 5578326000 }
+  ]
+}

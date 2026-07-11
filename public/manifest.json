@@ -1,0 +1,19 @@
+{
+  "name": "RailCross — Railway Gate Predictions",
+  "short_name": "RailCross",
+  "description": "Predict railway crossing gate closures from traffic patterns",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1a73e8",
+  "background_color": "#121212",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["navigation", "travel"],
+  "lang": "en"
+}

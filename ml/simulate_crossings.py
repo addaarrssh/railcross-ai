@@ -19,20 +19,33 @@ import numpy as np
 
 
 FEATURE_COLUMNS = [
-    "hour_sin",
-    "hour_cos",
-    "day_of_week",
-    "is_weekend",
     "route_static_duration_seconds",
     "route_duration_seconds",
     "traffic_delay_seconds",
+    "approach_a_speed_kph",
+    "approach_b_speed_kph",
     "approach_a_speed_code",
     "approach_b_speed_code",
+    "stopped_vehicle_ratio_a",
+    "stopped_vehicle_ratio_b",
     "jam_segment_length_meters",
     "queue_a_vehicles",
     "queue_b_vehicles",
     "queue_growth_vehicles_per_minute",
     "congestion_age_minutes",
+    "speed_a_rolling_3min",
+    "speed_b_rolling_3min",
+    "queue_growth_rolling_3min",
+    "queue_growth_rolling_10min",
+    "queue_acceleration",
+    "speed_trend_5min",
+]
+
+CONTEXT_COLUMNS = [
+    "hour_sin",
+    "hour_cos",
+    "day_of_week",
+    "is_weekend",
     "community_closed_weight",
     "community_open_weight",
     "community_report_count",
@@ -49,7 +62,7 @@ METADATA_COLUMNS = [
 ]
 
 TARGET_COLUMNS = ["gate_closed", "remaining_closed_seconds"]
-ALL_COLUMNS = METADATA_COLUMNS + FEATURE_COLUMNS + TARGET_COLUMNS
+ALL_COLUMNS = METADATA_COLUMNS + FEATURE_COLUMNS + CONTEXT_COLUMNS + TARGET_COLUMNS
 
 
 @dataclass(frozen=True)
@@ -57,7 +70,7 @@ class SimulationConfig:
     events: int = 650
     steps_per_event: int = 46
     step_seconds: int = 30
-    closure_probability: float = 0.68
+    closure_probability: float = 0.50
     seed: int = 42
 
 
@@ -92,15 +105,49 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
         event_start = base_time + timedelta(minutes=37 * event_id)
         hour = event_start.hour + event_start.minute / 60
         volume_multiplier = _rush_multiplier(hour)
+        
         has_closure = bool(rng.random() < config.closure_probability)
-        has_ordinary_jam = bool((not has_closure) and rng.random() < 0.65)
-        closure_start = int(rng.integers(5, 11))
-        closure_steps = int(rng.integers(9, 25))
-        closure_end = min(closure_start + closure_steps, config.steps_per_event - 5)
-        ordinary_jam_start = int(rng.integers(6, 14))
-        ordinary_jam_end = min(ordinary_jam_start + int(rng.integers(7, 19)), config.steps_per_event - 2)
+        
+        # Scenario distribution
+        if has_closure:
+            scenario_kind = "railway_closure"
+        else:
+            kinds = [
+                "ordinary_congestion", 
+                "road_accident", 
+                "market_day", 
+                "construction_zone", 
+                "school_zone", 
+                "signal_failure", 
+                "weather_flooding"
+            ]
+            probs = [0.25, 0.15, 0.12, 0.12, 0.12, 0.12, 0.12]
+            scenario_kind = str(rng.choice(kinds, p=probs))
+
+        scenario_start = int(rng.integers(5, 11))
+        
+        if scenario_kind == "railway_closure":
+            scenario_steps = int(rng.integers(9, 25))
+        elif scenario_kind == "ordinary_congestion":
+            scenario_steps = int(rng.integers(7, 19))
+        elif scenario_kind == "road_accident":
+            scenario_steps = int(rng.integers(16, 41)) # 8-20 mins
+        elif scenario_kind == "market_day":
+            scenario_steps = int(rng.integers(30, 61)) # 15-30 mins
+        elif scenario_kind == "construction_zone":
+            scenario_steps = int(rng.integers(20, 51)) # 10-25 mins
+        elif scenario_kind == "school_zone":
+            scenario_steps = 30 # 15 mins
+        elif scenario_kind == "signal_failure":
+            scenario_steps = int(rng.integers(16, 31)) # 8-15 mins
+        elif scenario_kind == "weather_flooding":
+            scenario_steps = int(rng.integers(40, 81)) # 20-40 mins
+        else:
+            scenario_steps = 0
+
+        scenario_end = min(scenario_start + scenario_steps, config.steps_per_event - 2)
         ordinary_jam_side = int(rng.choice([0, 1, 2], p=[0.35, 0.35, 0.30]))
-        false_train_signal = bool((not has_closure) and rng.random() < 0.38)
+        false_train_signal = bool((scenario_kind != "railway_closure") and rng.random() < 0.38)
         false_train_center = int(rng.integers(5, config.steps_per_event - 5))
 
         preexisting_congestion = bool(rng.random() < 0.20)
@@ -111,11 +158,17 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
         closed_report_weight = 0.0
         open_report_weight = 0.0
 
+        # Temporal history queues
+        history_speed_a: list[float] = []
+        history_speed_b: list[float] = []
+        history_queue_growth: list[float] = []
+        history_combined_speed: list[float] = []
+
         for step in range(config.steps_per_event):
             timestamp = event_start + timedelta(seconds=step * config.step_seconds)
-            gate_closed = int(has_closure and closure_start <= step < closure_end)
-            gate_just_opened = bool(has_closure and step >= closure_end)
-            ordinary_jam = bool(has_ordinary_jam and ordinary_jam_start <= step < ordinary_jam_end)
+            in_scenario = (scenario_start <= step < scenario_end)
+            gate_closed = int(scenario_kind == "railway_closure" and in_scenario)
+            gate_just_opened = bool(scenario_kind == "railway_closure" and step >= scenario_end)
             arrivals_a = max(0.5, rng.normal(3.1 * volume_multiplier, 0.65))
             arrivals_b = max(0.4, rng.normal(2.7 * volume_multiplier, 0.6))
 
@@ -125,7 +178,7 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             elif gate_just_opened and queue_a + queue_b > 2:
                 queue_a = max(0.0, queue_a - max(1.4, rng.normal(4.9, 0.65)) * 0.5)
                 queue_b = max(0.0, queue_b - max(1.2, rng.normal(4.4, 0.6)) * 0.5)
-            elif ordinary_jam:
+            elif scenario_kind == "ordinary_congestion" and in_scenario:
                 if ordinary_jam_side == 0:
                     queue_a += arrivals_a * 0.33
                     queue_b = max(0.0, queue_b - 0.6)
@@ -135,6 +188,30 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
                 else:
                     queue_a += arrivals_a * 0.31
                     queue_b += arrivals_b * 0.30
+            elif scenario_kind == "road_accident" and in_scenario:
+                mult = float(rng.uniform(0.40, 0.45))
+                queue_a += arrivals_a * mult
+                queue_b += arrivals_b * mult
+            elif scenario_kind == "market_day" and in_scenario:
+                mult = float(rng.uniform(0.25, 0.30))
+                queue_a += arrivals_a * mult
+                queue_b += arrivals_b * mult
+            elif scenario_kind == "construction_zone" and in_scenario:
+                queue_a += arrivals_a * 0.38
+                queue_b += arrivals_b * 0.20
+            elif scenario_kind == "school_zone" and in_scenario:
+                queue_a += arrivals_a * 0.28
+                queue_b += arrivals_b * 0.28
+            elif scenario_kind == "signal_failure" and in_scenario:
+                if step % 4 == 0:
+                    queue_a = max(0.0, queue_a - 1.0)
+                    queue_b = max(0.0, queue_b - 1.0)
+                else:
+                    queue_a += arrivals_a * 0.35
+                    queue_b += arrivals_b * 0.25
+            elif scenario_kind == "weather_flooding" and in_scenario:
+                queue_a += arrivals_a * 0.15
+                queue_b += arrivals_b * 0.15
             else:
                 queue_a = max(0.0, queue_a + rng.normal(-0.25, 0.45))
                 queue_b = max(0.0, queue_b + rng.normal(-0.2, 0.4))
@@ -147,8 +224,20 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
 
             speed_a = free_flow_kph * math.exp(-queue_a / 19.0) + rng.normal(0, 1.7)
             speed_b = free_flow_kph * math.exp(-queue_b / 19.0) + rng.normal(0, 1.7)
+
+            if scenario_kind == "weather_flooding" and in_scenario:
+                speed_a *= float(rng.uniform(0.3, 0.5))
+                speed_b *= float(rng.uniform(0.3, 0.5))
+            elif scenario_kind == "road_accident" and in_scenario:
+                speed_a *= 0.4
+                speed_b *= 0.4
+
             speed_a = float(np.clip(speed_a, 1.5, free_flow_kph + 4))
             speed_b = float(np.clip(speed_b, 1.5, free_flow_kph + 4))
+            observed_speed_a = float(np.clip(speed_a + rng.normal(0, 1.2), 0, free_flow_kph + 6))
+            observed_speed_b = float(np.clip(speed_b + rng.normal(0, 1.2), 0, free_flow_kph + 6))
+            stopped_ratio_a = float(np.clip(max(0.0, 1 - observed_speed_a / free_flow_kph) ** 1.35 + rng.normal(0, 0.045), 0, 1))
+            stopped_ratio_b = float(np.clip(max(0.0, 1 - observed_speed_b / free_flow_kph) ** 1.35 + rng.normal(0, 0.045), 0, 1))
             speed_code_a = _speed_code(speed_a, free_flow_kph)
             speed_code_b = _speed_code(speed_b, free_flow_kph)
             if rng.random() < 0.08:
@@ -162,7 +251,9 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             observed_queue_growth = queue_growth + rng.normal(0, 3.4)
             jam_length = max(0.0, observed_total_queue * rng.normal(6.15, 1.15))
             static_duration = max(90.0, rng.normal(base_duration, 4.0))
-            asymmetric_penalty = 12.0 if ordinary_jam else 0.0
+            
+            is_ordinary_or_similar = scenario_kind in ["ordinary_congestion", "road_accident", "market_day", "construction_zone", "school_zone", "signal_failure"]
+            asymmetric_penalty = 12.0 if (is_ordinary_or_similar and in_scenario) else 0.0
             traffic_delay = max(0.0, observed_total_queue * 4.05 + asymmetric_penalty + rng.normal(0, 22.0))
             route_duration = static_duration + traffic_delay
             if traffic_delay > 45:
@@ -170,10 +261,10 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             else:
                 congestion_age = max(0.0, congestion_age - 1.0)
 
-            if has_closure:
-                proximity = max(0.0, 1.0 - abs(step - closure_start) / 8.0)
-                if step > closure_start:
-                    proximity = max(proximity, max(0.0, 0.75 - (step - closure_start) / 42.0))
+            if scenario_kind == "railway_closure":
+                proximity = max(0.0, 1.0 - abs(step - scenario_start) / 8.0)
+                if step > scenario_start:
+                    proximity = max(proximity, max(0.0, 0.75 - (step - scenario_start) / 42.0))
             elif false_train_signal:
                 proximity = max(0.0, 0.9 - abs(step - false_train_center) / 10.0)
             else:
@@ -183,9 +274,9 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             closed_report_weight *= 0.90
             open_report_weight *= 0.88
             report_delay = int(rng.integers(2, 6))
-            if gate_closed and step >= closure_start + report_delay and rng.random() < 0.52:
+            if gate_closed and step >= scenario_start + report_delay and rng.random() < 0.52:
                 closed_report_weight += max(0.0, rng.normal(0.72, 0.24))
-            if ordinary_jam and rng.random() < 0.30:
+            if is_ordinary_or_similar and in_scenario and rng.random() < 0.30:
                 closed_report_weight += max(0.0, rng.normal(0.48, 0.22))
             if (not gate_closed) and rng.random() < 0.055:
                 closed_report_weight += max(0.0, rng.normal(0.34, 0.16))
@@ -197,15 +288,36 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             open_weight = max(0.0, open_report_weight + rng.normal(0, 0.12))
             report_count = int(round(max(0.0, closed_weight + open_weight + rng.normal(0, 0.8))))
 
+            # Store in histories
+            history_speed_a.append(observed_speed_a)
+            history_speed_b.append(observed_speed_b)
+            history_queue_growth.append(observed_queue_growth)
+            history_combined_speed.append((observed_speed_a + observed_speed_b) / 2.0)
+
+            # Compute rolling features
+            speed_a_roll = float(np.mean(history_speed_a[-6:]))
+            speed_b_roll = float(np.mean(history_speed_b[-6:]))
+            qg_roll_3m = float(np.mean(history_queue_growth[-6:]))
+            qg_roll_10m = float(np.mean(history_queue_growth[-20:]))
+            q_accel = float(observed_queue_growth - (history_queue_growth[-7] if len(history_queue_growth) >= 7 else observed_queue_growth))
+            
+            y_speed = history_combined_speed[-10:]
+            N_speed = len(y_speed)
+            if N_speed > 1:
+                x_speed = np.arange(N_speed)
+                speed_trend = float(np.polyfit(x_speed, y_speed, 1)[0])
+            else:
+                speed_trend = 0.0
+
             current_hour = timestamp.hour + timestamp.minute / 60
-            remaining_seconds = max(0, (closure_end - step) * config.step_seconds) if gate_closed else 0
-            scenario_kind = "railway_closure" if has_closure else "ordinary_congestion" if has_ordinary_jam else "normal_flow"
+            remaining_seconds = max(0, (scenario_end - step) * config.step_seconds) if gate_closed else 0
+            
             row: dict[str, object] = {
                 "event_id": event_id,
                 "timestamp_utc": timestamp.isoformat(),
                 "crossing_id": crossing_id,
                 "scenario_kind": scenario_kind,
-                "ground_truth_source": "synthetic_simulator_v1",
+                "ground_truth_source": "synthetic_simulator_v2",
                 "hour_sin": math.sin(2 * math.pi * current_hour / 24),
                 "hour_cos": math.cos(2 * math.pi * current_hour / 24),
                 "day_of_week": timestamp.weekday(),
@@ -213,13 +325,23 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
                 "route_static_duration_seconds": static_duration,
                 "route_duration_seconds": route_duration,
                 "traffic_delay_seconds": traffic_delay,
+                "approach_a_speed_kph": observed_speed_a,
+                "approach_b_speed_kph": observed_speed_b,
                 "approach_a_speed_code": speed_code_a,
                 "approach_b_speed_code": speed_code_b,
+                "stopped_vehicle_ratio_a": stopped_ratio_a,
+                "stopped_vehicle_ratio_b": stopped_ratio_b,
                 "jam_segment_length_meters": jam_length,
                 "queue_a_vehicles": observed_queue_a,
                 "queue_b_vehicles": observed_queue_b,
                 "queue_growth_vehicles_per_minute": observed_queue_growth,
                 "congestion_age_minutes": congestion_age,
+                "speed_a_rolling_3min": speed_a_roll,
+                "speed_b_rolling_3min": speed_b_roll,
+                "queue_growth_rolling_3min": qg_roll_3m,
+                "queue_growth_rolling_10min": qg_roll_10m,
+                "queue_acceleration": q_accel,
+                "speed_trend_5min": speed_trend,
                 "community_closed_weight": closed_weight,
                 "community_open_weight": open_weight,
                 "community_report_count": report_count,

@@ -1,0 +1,529 @@
+id,osm_node_id,district,latitude,longitude,name,crossing_barrier,crossing_activation,crossing_supervision,crossing_light,crossing_bell,access,osm_url
+osm-node-566142879,566142879,East Singhbhum,22.7497246,86.2449489,,,,,,,,https://www.openstreetmap.org/node/566142879
+osm-node-566143121,566143121,East Singhbhum,22.7322609,86.2861142,,full,local,attendant,,,,https://www.openstreetmap.org/node/566143121
+osm-node-566144904,566144904,East Singhbhum,22.6932686,86.2013282,,,,,,,,https://www.openstreetmap.org/node/566144904
+osm-node-566146084,566146084,East Singhbhum,22.7382516,86.1964665,,full,local,attendant,,,,https://www.openstreetmap.org/node/566146084
+osm-node-566146244,566146244,East Singhbhum,22.7491397,86.2008327,,,,,,,,https://www.openstreetmap.org/node/566146244
+osm-node-566146540,566146540,East Singhbhum,22.7575076,86.2089924,,,,,,,,https://www.openstreetmap.org/node/566146540
+osm-node-566150089,566150089,East Singhbhum,22.7806416,86.184863,,,,,,,,https://www.openstreetmap.org/node/566150089
+osm-node-577490113,577490113,East Singhbhum,22.7129349,86.3124196,,,,,,,,https://www.openstreetmap.org/node/577490113
+osm-node-749453276,749453276,East Singhbhum,22.7557834,86.2380478,,,,,,,,https://www.openstreetmap.org/node/749453276
+osm-node-1323456197,1323456197,East Singhbhum,22.5307839,86.1581486,,,,,,,,https://www.openstreetmap.org/node/1323456197
+osm-node-1323456373,1323456373,East Singhbhum,22.5754592,86.1485945,,full,local,attendant,,,,https://www.openstreetmap.org/node/1323456373
+osm-node-1323457006,1323457006,East Singhbhum,22.7598669,86.2229523,,,,,,,,https://www.openstreetmap.org/node/1323457006
+osm-node-1323457082,1323457082,East Singhbhum,22.7672669,86.2115999,,no,,,,,,https://www.openstreetmap.org/node/1323457082
+osm-node-1323457101,1323457101,East Singhbhum,22.7679717,86.2121269,,no,,,,,,https://www.openstreetmap.org/node/1323457101
+osm-node-1323457147,1323457147,East Singhbhum,22.7691474,86.212428,,no,,,,,,https://www.openstreetmap.org/node/1323457147
+osm-node-1347805884,1347805884,East Singhbhum,22.7552123,86.2371439,,,,,,,,https://www.openstreetmap.org/node/1347805884
+osm-node-1347805892,1347805892,East Singhbhum,22.7852292,86.214068,,no,,,,,,https://www.openstreetmap.org/node/1347805892
+osm-node-2519245921,2519245921,East Singhbhum,22.7498341,86.2449977,,,,,,,,https://www.openstreetmap.org/node/2519245921
+osm-node-2519533976,2519533976,East Singhbhum,22.5915891,86.4681217,,,,,,,,https://www.openstreetmap.org/node/2519533976
+osm-node-2519534157,2519534157,East Singhbhum,22.6578669,86.3725485,,,,,,,,https://www.openstreetmap.org/node/2519534157
+osm-node-2519555631,2519555631,East Singhbhum,22.4755519,86.6856687,,,,,,,,https://www.openstreetmap.org/node/2519555631
+osm-node-2519555691,2519555691,East Singhbhum,22.4789972,86.6867655,,,,,,,,https://www.openstreetmap.org/node/2519555691
+osm-node-2519555762,2519555762,East Singhbhum,22.4803348,86.7474871,,,,,,,,https://www.openstreetmap.org/node/2519555762
+osm-node-2519555790,2519555790,East Singhbhum,22.4827447,86.7793585,,,,,,,,https://www.openstreetmap.org/node/2519555790
+osm-node-2519555791,2519555791,East Singhbhum,22.4827073,86.7793637,,,,,,,,https://www.openstreetmap.org/node/2519555791
+osm-node-2519555951,2519555951,East Singhbhum,22.5139347,86.5423376,,full,local,attendant,,,,https://www.openstreetmap.org/node/2519555951
+osm-node-2519556017,2519556017,East Singhbhum,22.547589,86.5179407,,,,,,,,https://www.openstreetmap.org/node/2519556017
+osm-node-2519556018,2519556018,East Singhbhum,22.5475901,86.5180077,,,,,,,,https://www.openstreetmap.org/node/2519556018
+osm-node-2519556080,2519556080,East Singhbhum,22.5837772,86.4839167,,,,,,,,https://www.openstreetmap.org/node/2519556080
+osm-node-2689354030,2689354030,East Singhbhum,22.6181953,86.1675818,,full,local,attendant,,,,https://www.openstreetmap.org/node/2689354030
+osm-node-2689354296,2689354296,East Singhbhum,22.6525182,86.4031985,,full,local,attendant,,,,https://www.openstreetmap.org/node/2689354296
+osm-node-2689354300,2689354300,East Singhbhum,22.6525583,86.4032244,,full,local,attendant,,,,https://www.openstreetmap.org/node/2689354300
+osm-node-3015052272,3015052272,East Singhbhum,22.6713847,86.3565442,,full,local,attendant,,,,https://www.openstreetmap.org/node/3015052272
+osm-node-3015052273,3015052273,East Singhbhum,22.6714529,86.3566251,,full,local,attendant,,,,https://www.openstreetmap.org/node/3015052273
+osm-node-5578326000,5578326000,East Singhbhum,22.795721,86.2006416,,,,,,,,https://www.openstreetmap.org/node/5578326000
+osm-node-6035863908,6035863908,East Singhbhum,22.5969017,86.1426114,,full,local,attendant,,,,https://www.openstreetmap.org/node/6035863908
+osm-node-6035886635,6035886635,East Singhbhum,22.5420805,86.1552407,,full,local,attendant,,,,https://www.openstreetmap.org/node/6035886635
+osm-node-6132277290,6132277290,East Singhbhum,22.5837315,86.4838822,,,,,,,,https://www.openstreetmap.org/node/6132277290
+osm-node-6132277299,6132277299,East Singhbhum,22.5103743,86.5467849,,,,,,,,https://www.openstreetmap.org/node/6132277299
+osm-node-6132277331,6132277331,East Singhbhum,22.6565385,86.3897978,,,,,,,,https://www.openstreetmap.org/node/6132277331
+osm-node-6132277710,6132277710,East Singhbhum,22.4790891,86.731688,,,,,,,,https://www.openstreetmap.org/node/6132277710
+osm-node-6132277782,6132277782,East Singhbhum,22.480273,86.7474834,,,,,,,,https://www.openstreetmap.org/node/6132277782
+osm-node-6132277990,6132277990,East Singhbhum,22.5518278,86.1518828,,,,,,,,https://www.openstreetmap.org/node/6132277990
+osm-node-6132278008,6132278008,East Singhbhum,22.5138987,86.5422983,,full,local,attendant,,,,https://www.openstreetmap.org/node/6132278008
+osm-node-6132278055,6132278055,East Singhbhum,22.7082656,86.3178887,,,,,,,,https://www.openstreetmap.org/node/6132278055
+osm-node-6251363594,6251363594,East Singhbhum,22.6867296,86.3431286,,,,,,,,https://www.openstreetmap.org/node/6251363594
+osm-node-6251363719,6251363719,East Singhbhum,22.5164754,86.1555982,,,,,,,,https://www.openstreetmap.org/node/6251363719
+osm-node-6251363726,6251363726,East Singhbhum,22.5415823,86.521728,,,,,,,,https://www.openstreetmap.org/node/6251363726
+osm-node-6251363748,6251363748,East Singhbhum,22.4786255,86.5955735,,,,,,,,https://www.openstreetmap.org/node/6251363748
+osm-node-6251363762,6251363762,East Singhbhum,22.4915045,86.5707309,,,,,,,,https://www.openstreetmap.org/node/6251363762
+osm-node-6251364918,6251364918,East Singhbhum,22.6575107,86.3724918,,,,,,,,https://www.openstreetmap.org/node/6251364918
+osm-node-6251365715,6251365715,East Singhbhum,22.568937,86.1489962,,,,,,,,https://www.openstreetmap.org/node/6251365715
+osm-node-6251365766,6251365766,East Singhbhum,22.5488609,86.1528841,,,,,,,,https://www.openstreetmap.org/node/6251365766
+osm-node-6251366038,6251366038,East Singhbhum,22.554432,86.1509738,,,,,,,,https://www.openstreetmap.org/node/6251366038
+osm-node-6251366468,6251366468,East Singhbhum,22.7742934,86.1941732,,,,,,,,https://www.openstreetmap.org/node/6251366468
+osm-node-6251366600,6251366600,East Singhbhum,22.7745101,86.1937403,,,,,,,,https://www.openstreetmap.org/node/6251366600
+osm-node-6251366843,6251366843,East Singhbhum,22.7558213,86.2381101,,,,,,,,https://www.openstreetmap.org/node/6251366843
+osm-node-6960352066,6960352066,East Singhbhum,22.4791309,86.7316947,,,,,,,,https://www.openstreetmap.org/node/6960352066
+osm-node-6960352067,6960352067,East Singhbhum,22.4788666,86.6709841,,,,,,,,https://www.openstreetmap.org/node/6960352067
+osm-node-6960352069,6960352069,East Singhbhum,22.4787212,86.5956156,,,,,,,,https://www.openstreetmap.org/node/6960352069
+osm-node-6960352070,6960352070,East Singhbhum,22.4915372,86.570783,,,,,,,,https://www.openstreetmap.org/node/6960352070
+osm-node-6960352071,6960352071,East Singhbhum,22.5103953,86.5468434,,,,,,,,https://www.openstreetmap.org/node/6960352071
+osm-node-6960352073,6960352073,East Singhbhum,22.5416245,86.5217966,,,,,,,,https://www.openstreetmap.org/node/6960352073
+osm-node-6960352075,6960352075,East Singhbhum,22.626536,86.4380831,,,,,,,,https://www.openstreetmap.org/node/6960352075
+osm-node-6960352076,6960352076,East Singhbhum,22.6451773,86.416537,,,,,,,,https://www.openstreetmap.org/node/6960352076
+osm-node-6960352077,6960352077,East Singhbhum,22.6565988,86.3897924,,,,,,,,https://www.openstreetmap.org/node/6960352077
+osm-node-6960352078,6960352078,East Singhbhum,22.6867632,86.3431682,,,,,,,,https://www.openstreetmap.org/node/6960352078
+osm-node-6960352079,6960352079,East Singhbhum,22.6967986,86.3314268,,,,,,,,https://www.openstreetmap.org/node/6960352079
+osm-node-6960352080,6960352080,East Singhbhum,22.7083034,86.3179338,,,,,,,,https://www.openstreetmap.org/node/6960352080
+osm-node-6960352081,6960352081,East Singhbhum,22.7129736,86.3124626,,,,,,,,https://www.openstreetmap.org/node/6960352081
+osm-node-6960352082,6960352082,East Singhbhum,22.7193096,86.3051429,,,,,,,,https://www.openstreetmap.org/node/6960352082
+osm-node-7014415280,7014415280,East Singhbhum,22.7805959,86.1848889,,,,,,,,https://www.openstreetmap.org/node/7014415280
+osm-node-7014423788,7014423788,East Singhbhum,22.7805341,86.1848983,,,,,,,,https://www.openstreetmap.org/node/7014423788
+osm-node-7016295078,7016295078,East Singhbhum,22.7500734,86.2451568,,,,,,,,https://www.openstreetmap.org/node/7016295078
+osm-node-7016304885,7016304885,East Singhbhum,22.7553073,86.2372394,,,,,,,,https://www.openstreetmap.org/node/7016304885
+osm-node-7016334168,7016334168,East Singhbhum,22.7521746,86.2465475,,,,,,,private,https://www.openstreetmap.org/node/7016334168
+osm-node-7016700424,7016700424,East Singhbhum,22.7444809,86.2572608,,,,,,,,https://www.openstreetmap.org/node/7016700424
+osm-node-7016700425,7016700425,East Singhbhum,22.7445254,86.2572894,,,,,,,,https://www.openstreetmap.org/node/7016700425
+osm-node-7141152260,7141152260,East Singhbhum,22.7516347,86.2030683,,,,,,,,https://www.openstreetmap.org/node/7141152260
+osm-node-7141201797,7141201797,East Singhbhum,22.7836262,86.1976832,,,,,,,,https://www.openstreetmap.org/node/7141201797
+osm-node-7209178696,7209178696,East Singhbhum,22.6384835,86.1875107,,,,,,,,https://www.openstreetmap.org/node/7209178696
+osm-node-7209178697,7209178697,East Singhbhum,22.6298072,86.1811319,,,,,,,,https://www.openstreetmap.org/node/7209178697
+osm-node-7902998497,7902998497,East Singhbhum,22.5038137,86.5547387,,,,,,,,https://www.openstreetmap.org/node/7902998497
+osm-node-7902998498,7902998498,East Singhbhum,22.5039716,86.5548551,,,,,,,,https://www.openstreetmap.org/node/7902998498
+osm-node-7902998499,7902998499,East Singhbhum,22.5041798,86.5550116,,,,,,,,https://www.openstreetmap.org/node/7902998499
+osm-node-7902998515,7902998515,East Singhbhum,22.5041381,86.5554473,,,,,,,,https://www.openstreetmap.org/node/7902998515
+osm-node-7902998516,7902998516,East Singhbhum,22.4767934,86.6145746,,,,,,,,https://www.openstreetmap.org/node/7902998516
+osm-node-7902998517,7902998517,East Singhbhum,22.4768844,86.6145858,,,,,,,,https://www.openstreetmap.org/node/7902998517
+osm-node-7906126056,7906126056,East Singhbhum,22.6202478,86.1715516,,,,,,,,https://www.openstreetmap.org/node/7906126056
+osm-node-8090797059,8090797059,East Singhbhum,22.7518443,86.2463909,,,,,,,private,https://www.openstreetmap.org/node/8090797059
+osm-node-8494162340,8494162340,East Singhbhum,22.7546678,86.2400067,,,,,,,private,https://www.openstreetmap.org/node/8494162340
+osm-node-8494162341,8494162341,East Singhbhum,22.7545237,86.2400197,,,,,,,private,https://www.openstreetmap.org/node/8494162341
+osm-node-8494162342,8494162342,East Singhbhum,22.754806,86.2399943,,,,,,,private,https://www.openstreetmap.org/node/8494162342
+osm-node-8494162343,8494162343,East Singhbhum,22.7547719,86.2399973,,,,,,,private,https://www.openstreetmap.org/node/8494162343
+osm-node-8494162344,8494162344,East Singhbhum,22.7547165,86.2400023,,,,,,,private,https://www.openstreetmap.org/node/8494162344
+osm-node-8494162345,8494162345,East Singhbhum,22.7546044,86.2400124,,,,,,,private,https://www.openstreetmap.org/node/8494162345
+osm-node-8494162346,8494162346,East Singhbhum,22.7544612,86.2400253,,,,,,,private,https://www.openstreetmap.org/node/8494162346
+osm-node-8494162347,8494162347,East Singhbhum,22.7535896,86.2425132,,,,,,,private,https://www.openstreetmap.org/node/8494162347
+osm-node-8494162348,8494162348,East Singhbhum,22.7536529,86.2425506,,,,,,,private,https://www.openstreetmap.org/node/8494162348
+osm-node-8494162349,8494162349,East Singhbhum,22.7538683,86.2426783,,,,,,,private,https://www.openstreetmap.org/node/8494162349
+osm-node-8494162350,8494162350,East Singhbhum,22.753818,86.2426485,,,,,,,private,https://www.openstreetmap.org/node/8494162350
+osm-node-8494162351,8494162351,East Singhbhum,22.7537687,86.2426193,,,,,,,private,https://www.openstreetmap.org/node/8494162351
+osm-node-8516252324,8516252324,East Singhbhum,22.7519743,86.2464376,,,,,,,private,https://www.openstreetmap.org/node/8516252324
+osm-node-8516252325,8516252325,East Singhbhum,22.7520893,86.2464859,,,,,,,private,https://www.openstreetmap.org/node/8516252325
+osm-node-9214480672,9214480672,East Singhbhum,22.7323226,86.2861737,,full,local,attendant,,,,https://www.openstreetmap.org/node/9214480672
+osm-node-9273072159,9273072159,East Singhbhum,22.7527714,86.2042061,,,,,,,,https://www.openstreetmap.org/node/9273072159
+osm-node-9273075390,9273075390,East Singhbhum,22.7309019,86.1959674,,full,,,,,,https://www.openstreetmap.org/node/9273075390
+osm-node-9273088027,9273088027,East Singhbhum,22.7105653,86.2008031,,full,local,attendant,,,,https://www.openstreetmap.org/node/9273088027
+osm-node-9273228323,9273228323,East Singhbhum,22.7751589,86.1937415,,,,,,,,https://www.openstreetmap.org/node/9273228323
+osm-node-9273228332,9273228332,East Singhbhum,22.7731292,86.1960987,,,,,,,,https://www.openstreetmap.org/node/9273228332
+osm-node-9396018523,9396018523,East Singhbhum,22.667976,86.2039285,,,,,,,,https://www.openstreetmap.org/node/9396018523
+osm-node-9396095407,9396095407,East Singhbhum,22.6603765,86.2001353,,,,,,,,https://www.openstreetmap.org/node/9396095407
+osm-node-9396357048,9396357048,East Singhbhum,22.6554686,86.1965662,,,,,,,,https://www.openstreetmap.org/node/9396357048
+osm-node-9396569453,9396569453,East Singhbhum,22.5000073,86.1540492,,,,,,,,https://www.openstreetmap.org/node/9396569453
+osm-node-9396569523,9396569523,East Singhbhum,22.501509,86.1540755,,,,,,,,https://www.openstreetmap.org/node/9396569523
+osm-node-9396613296,9396613296,East Singhbhum,22.5150199,86.1553925,,,,,,,,https://www.openstreetmap.org/node/9396613296
+osm-node-9398134285,9398134285,East Singhbhum,22.647601,86.1909641,,,,,,,,https://www.openstreetmap.org/node/9398134285
+osm-node-9398427393,9398427393,East Singhbhum,22.4745245,86.6724609,,,,,,,,https://www.openstreetmap.org/node/9398427393
+osm-node-9398487755,9398487755,East Singhbhum,22.6124766,86.1572145,,full,local,attendant,,,,https://www.openstreetmap.org/node/9398487755
+osm-node-9398766657,9398766657,East Singhbhum,22.6967296,86.3313586,,,,,,,,https://www.openstreetmap.org/node/9398766657
+osm-node-9406559339,9406559339,East Singhbhum,22.6009593,86.1442617,,,,,,,,https://www.openstreetmap.org/node/9406559339
+osm-node-9409319143,9409319143,East Singhbhum,22.4789471,86.6709698,,,,,,,,https://www.openstreetmap.org/node/9409319143
+osm-node-9409319166,9409319166,East Singhbhum,22.4790696,86.6867829,,,,,,,,https://www.openstreetmap.org/node/9409319166
+osm-node-9409551812,9409551812,East Singhbhum,22.6264649,86.4379902,,,,,,,,https://www.openstreetmap.org/node/9409551812
+osm-node-9411774449,9411774449,East Singhbhum,22.5139647,86.5423809,,full,local,attendant,,,,https://www.openstreetmap.org/node/9411774449
+osm-node-9412092580,9412092580,East Singhbhum,22.6038698,86.4556443,,full,local,attendant,,,,https://www.openstreetmap.org/node/9412092580
+osm-node-9412092581,9412092581,East Singhbhum,22.603789,86.4555734,,full,local,attendant,,,,https://www.openstreetmap.org/node/9412092581
+osm-node-9412515976,9412515976,East Singhbhum,22.7765388,86.1916718,,no,,,,,,https://www.openstreetmap.org/node/9412515976
+osm-node-9414480729,9414480729,East Singhbhum,22.5915208,86.468091,,full,local,attendant,,,,https://www.openstreetmap.org/node/9414480729
+osm-node-9414754561,9414754561,East Singhbhum,22.7832419,86.1866084,,,,,,,,https://www.openstreetmap.org/node/9414754561
+osm-node-9417026247,9417026247,East Singhbhum,22.5974151,86.4548994,,,,,,,,https://www.openstreetmap.org/node/9417026247
+osm-node-9417063728,9417063728,East Singhbhum,22.7894105,86.1876033,,no,,,,,,https://www.openstreetmap.org/node/9417063728
+osm-node-9417063757,9417063757,East Singhbhum,22.7942202,86.1900857,,,,,,,,https://www.openstreetmap.org/node/9417063757
+osm-node-9417100122,9417100122,East Singhbhum,22.7942988,86.1906311,,,,,,,,https://www.openstreetmap.org/node/9417100122
+osm-node-9427295911,9427295911,East Singhbhum,22.759071,86.2248444,,,,,,,,https://www.openstreetmap.org/node/9427295911
+osm-node-9427295912,9427295912,East Singhbhum,22.7591039,86.2248444,,,,,,,,https://www.openstreetmap.org/node/9427295912
+osm-node-9427295913,9427295913,East Singhbhum,22.7591639,86.2248391,,,,,,,,https://www.openstreetmap.org/node/9427295913
+osm-node-9427298325,9427298325,East Singhbhum,22.7599192,86.2247103,,,,,,,,https://www.openstreetmap.org/node/9427298325
+osm-node-9429903045,9429903045,East Singhbhum,22.7942784,86.1936728,,no,,,,,,https://www.openstreetmap.org/node/9429903045
+osm-node-9429903080,9429903080,East Singhbhum,22.7954814,86.2003565,,,,,,,,https://www.openstreetmap.org/node/9429903080
+osm-node-9430209813,9430209813,East Singhbhum,22.7960585,86.1911023,,,,,,,,https://www.openstreetmap.org/node/9430209813
+osm-node-9433935073,9433935073,East Singhbhum,22.7644456,86.2074484,,full,local,attendant,,,,https://www.openstreetmap.org/node/9433935073
+osm-node-9435569991,9435569991,East Singhbhum,22.7647051,86.2076052,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569991
+osm-node-9435569992,9435569992,East Singhbhum,22.7646929,86.2075985,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569992
+osm-node-9435569993,9435569993,East Singhbhum,22.7646583,86.2075768,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569993
+osm-node-9435569994,9435569994,East Singhbhum,22.7646243,86.2075556,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569994
+osm-node-9435569995,9435569995,East Singhbhum,22.7646074,86.2075447,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569995
+osm-node-9435569996,9435569996,East Singhbhum,22.7645852,86.2075296,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569996
+osm-node-9435569997,9435569997,East Singhbhum,22.764541,86.207504,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569997
+osm-node-9435569998,9435569998,East Singhbhum,22.7644959,86.2074796,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569998
+osm-node-9435569999,9435569999,East Singhbhum,22.7647359,86.207624,,full,local,attendant,,,,https://www.openstreetmap.org/node/9435569999
+osm-node-9435570000,9435570000,East Singhbhum,22.7640001,86.2108326,,,,,,,,https://www.openstreetmap.org/node/9435570000
+osm-node-9436767058,9436767058,East Singhbhum,22.7782476,86.1939151,,,,,,,,https://www.openstreetmap.org/node/9436767058
+osm-node-9436767059,9436767059,East Singhbhum,22.778153,86.1939587,,,,,,,,https://www.openstreetmap.org/node/9436767059
+osm-node-9436792087,9436792087,East Singhbhum,22.7877484,86.2037018,,,,,,,,https://www.openstreetmap.org/node/9436792087
+osm-node-9558689662,9558689662,East Singhbhum,22.7598558,86.224653,,,,,,,,https://www.openstreetmap.org/node/9558689662
+osm-node-9558689679,9558689679,East Singhbhum,22.7733145,86.1963839,,no,,,,,,https://www.openstreetmap.org/node/9558689679
+osm-node-9558689686,9558689686,East Singhbhum,22.774723,86.1974446,,no,,,,,,https://www.openstreetmap.org/node/9558689686
+osm-node-9558689701,9558689701,East Singhbhum,22.7807928,86.2034337,,no,,,,,,https://www.openstreetmap.org/node/9558689701
+osm-node-9558689703,9558689703,East Singhbhum,22.7808288,86.2040212,,no,,,,,,https://www.openstreetmap.org/node/9558689703
+osm-node-9558699826,9558699826,East Singhbhum,22.7684999,86.2111275,,no,,,,,,https://www.openstreetmap.org/node/9558699826
+osm-node-9558756634,9558756634,East Singhbhum,22.7937832,86.1894329,,,,,,,,https://www.openstreetmap.org/node/9558756634
+osm-node-9558756679,9558756679,East Singhbhum,22.7835825,86.1975937,,,,,,,,https://www.openstreetmap.org/node/9558756679
+osm-node-9558756682,9558756682,East Singhbhum,22.7836008,86.1976423,,,,,,,,https://www.openstreetmap.org/node/9558756682
+osm-node-9558757670,9558757670,East Singhbhum,22.7895544,86.1900524,,no,,,,,,https://www.openstreetmap.org/node/9558757670
+osm-node-9558757680,9558757680,East Singhbhum,22.7895293,86.1876431,,no,,,,,,https://www.openstreetmap.org/node/9558757680
+osm-node-9558761436,9558761436,East Singhbhum,22.7943597,86.1905922,,,,,,,,https://www.openstreetmap.org/node/9558761436
+osm-node-9558761437,9558761437,East Singhbhum,22.7943283,86.1902973,,,,,,,,https://www.openstreetmap.org/node/9558761437
+osm-node-9558761641,9558761641,East Singhbhum,22.7829364,86.1872008,,no,,,,,,https://www.openstreetmap.org/node/9558761641
+osm-node-9558761642,9558761642,East Singhbhum,22.7829036,86.1872276,,no,,,,,,https://www.openstreetmap.org/node/9558761642
+osm-node-9563459162,9563459162,East Singhbhum,22.5914714,86.4680678,,full,local,attendant,,,,https://www.openstreetmap.org/node/9563459162
+osm-node-9563476739,9563476739,East Singhbhum,22.5974689,86.4548292,,,,,,,,https://www.openstreetmap.org/node/9563476739
+osm-node-9563477397,9563477397,East Singhbhum,22.5973862,86.454937,,,,,,,,https://www.openstreetmap.org/node/9563477397
+osm-node-9563477526,9563477526,East Singhbhum,22.5974389,86.4548683,,,,,,,,https://www.openstreetmap.org/node/9563477526
+osm-node-9563507027,9563507027,East Singhbhum,22.6451348,86.4165195,,,,,,,,https://www.openstreetmap.org/node/9563507027
+osm-node-9563507028,9563507028,East Singhbhum,22.6451569,86.4165265,,,,,,,,https://www.openstreetmap.org/node/9563507028
+osm-node-9563578178,9563578178,East Singhbhum,22.5838219,86.4839537,,,,,,,,https://www.openstreetmap.org/node/9563578178
+osm-node-9563578182,9563578182,East Singhbhum,22.5838015,86.4839368,,,,,,,,https://www.openstreetmap.org/node/9563578182
+osm-node-9590821180,9590821180,East Singhbhum,22.4828707,86.7793674,,,,,,,,https://www.openstreetmap.org/node/9590821180
+osm-node-9598062071,9598062071,East Singhbhum,22.769174,86.1993186,,no,,,,,,https://www.openstreetmap.org/node/9598062071
+osm-node-9598062072,9598062072,East Singhbhum,22.7692026,86.1993406,,no,,,,,,https://www.openstreetmap.org/node/9598062072
+osm-node-9598062074,9598062074,East Singhbhum,22.7693176,86.199429,,no,,,,,,https://www.openstreetmap.org/node/9598062074
+osm-node-9598062075,9598062075,East Singhbhum,22.769365,86.1994654,,no,,,,,,https://www.openstreetmap.org/node/9598062075
+osm-node-9598062076,9598062076,East Singhbhum,22.7693931,86.199487,,no,,,,,,https://www.openstreetmap.org/node/9598062076
+osm-node-11328888292,11328888292,East Singhbhum,22.7192397,86.3050368,,,,,,,,https://www.openstreetmap.org/node/11328888292
+osm-node-11935553156,11935553156,East Singhbhum,22.7745047,86.1937845,,,,,,,,https://www.openstreetmap.org/node/11935553156
+osm-node-11935571350,11935571350,East Singhbhum,22.7865296,86.1966316,,no,,,,,,https://www.openstreetmap.org/node/11935571350
+osm-node-11935582400,11935582400,East Singhbhum,22.774515,86.1936826,,,,,,,,https://www.openstreetmap.org/node/11935582400
+osm-node-11935582571,11935582571,East Singhbhum,22.7800251,86.1940318,,no,,,,,,https://www.openstreetmap.org/node/11935582571
+osm-node-11935582602,11935582602,East Singhbhum,22.7796133,86.1936832,,no,,,,,,https://www.openstreetmap.org/node/11935582602
+osm-node-11935582614,11935582614,East Singhbhum,22.7791967,86.1933455,,no,,,,,,https://www.openstreetmap.org/node/11935582614
+osm-node-11935582620,11935582620,East Singhbhum,22.7791048,86.1932747,,no,,,,,,https://www.openstreetmap.org/node/11935582620
+osm-node-11935582646,11935582646,East Singhbhum,22.784808,86.1985572,,no,,,,,,https://www.openstreetmap.org/node/11935582646
+osm-node-11940505096,11940505096,East Singhbhum,22.7939069,86.1893386,,,,,,,,https://www.openstreetmap.org/node/11940505096
+osm-node-11940505109,11940505109,East Singhbhum,22.7847285,86.1985019,,no,,,,,,https://www.openstreetmap.org/node/11940505109
+osm-node-11940505110,11940505110,East Singhbhum,22.7848407,86.1985213,,no,,,,,,https://www.openstreetmap.org/node/11940505110
+osm-node-11940505122,11940505122,East Singhbhum,22.7864777,86.1966974,,no,,,,,,https://www.openstreetmap.org/node/11940505122
+osm-node-11940505132,11940505132,East Singhbhum,22.7895082,86.1900388,,no,,,,,,https://www.openstreetmap.org/node/11940505132
+osm-node-11959149756,11959149756,East Singhbhum,22.7957713,86.2008692,,,,,,,,https://www.openstreetmap.org/node/11959149756
+osm-node-11959197389,11959197389,East Singhbhum,22.7840105,86.1979914,,,,,,,,https://www.openstreetmap.org/node/11959197389
+osm-node-11959197481,11959197481,East Singhbhum,22.7781055,86.1939722,,,,,,,,https://www.openstreetmap.org/node/11959197481
+osm-node-11959197536,11959197536,East Singhbhum,22.7742245,86.1942489,,,,,,,,https://www.openstreetmap.org/node/11959197536
+osm-node-11959197551,11959197551,East Singhbhum,22.7745023,86.1938239,,,,,,,,https://www.openstreetmap.org/node/11959197551
+osm-node-11959197559,11959197559,East Singhbhum,22.7743813,86.1940837,,,,,,,,https://www.openstreetmap.org/node/11959197559
+osm-node-11972269973,11972269973,East Singhbhum,22.7678907,86.212085,,,,,,,,https://www.openstreetmap.org/node/11972269973
+osm-node-11972269983,11972269983,East Singhbhum,22.7837495,86.1978187,,,,,,,,https://www.openstreetmap.org/node/11972269983
+osm-node-11972273323,11972273323,East Singhbhum,22.7848423,86.1985597,,no,,,,,,https://www.openstreetmap.org/node/11972273323
+osm-node-13752266505,13752266505,East Singhbhum,22.7815132,86.1967263,,,,,,,,https://www.openstreetmap.org/node/13752266505
+osm-node-13752266506,13752266506,East Singhbhum,22.7814704,86.196782,,,,,,,,https://www.openstreetmap.org/node/13752266506
+osm-node-13752266535,13752266535,East Singhbhum,22.7797041,86.1973034,,,,,,,,https://www.openstreetmap.org/node/13752266535
+osm-node-1310961981,1310961981,Latehar,23.6811057,84.7461976,,full,local,attendant,,,,https://www.openstreetmap.org/node/1310961981
+osm-node-2821317173,2821317173,Latehar,23.6747672,84.7773895,,,,,,,,https://www.openstreetmap.org/node/2821317173
+osm-node-2821317232,2821317232,Latehar,23.679096,84.7649827,,,,,,,,https://www.openstreetmap.org/node/2821317232
+osm-node-2821354341,2821354341,Latehar,23.6811536,84.7462023,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821354341
+osm-node-2821355359,2821355359,Latehar,23.7230043,84.4737252,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821355359
+osm-node-2821377047,2821377047,Latehar,23.7282138,84.4513455,,,,,,,,https://www.openstreetmap.org/node/2821377047
+osm-node-2821377064,2821377064,Latehar,23.7309668,84.4459733,,,,,,,,https://www.openstreetmap.org/node/2821377064
+osm-node-2821469974,2821469974,Latehar,23.8053306,84.2188574,,,,,,,,https://www.openstreetmap.org/node/2821469974
+osm-node-2821469975,2821469975,Latehar,23.8053762,84.2188825,,,,,,,,https://www.openstreetmap.org/node/2821469975
+osm-node-2821470717,2821470717,Latehar,23.8443885,84.1100754,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821470717
+osm-node-2821470718,2821470718,Latehar,23.8444368,84.1100891,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821470718
+osm-node-2821470738,2821470738,Latehar,23.8493601,84.1068443,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821470738
+osm-node-2821470739,2821470739,Latehar,23.8493752,84.1068972,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821470739
+osm-node-2821470756,2821470756,Latehar,23.8589606,84.1040876,,,,,,,,https://www.openstreetmap.org/node/2821470756
+osm-node-2821471063,2821471063,Latehar,23.8902932,84.1318421,,,,,,,,https://www.openstreetmap.org/node/2821471063
+osm-node-2821471442,2821471442,Latehar,23.9232505,84.1480402,,,,,,,,https://www.openstreetmap.org/node/2821471442
+osm-node-2821471486,2821471486,Latehar,23.941339,84.1445716,,,,,,,,https://www.openstreetmap.org/node/2821471486
+osm-node-6132276464,6132276464,Latehar,23.674641,84.7773364,,,,,,,,https://www.openstreetmap.org/node/6132276464
+osm-node-6132276985,6132276985,Latehar,23.7639526,84.3768206,,,,,,,,https://www.openstreetmap.org/node/6132276985
+osm-node-6132277770,6132277770,Latehar,23.7821287,84.3124328,,,,,,,,https://www.openstreetmap.org/node/6132277770
+osm-node-6132278001,6132278001,Latehar,23.8276716,84.1740947,,,,,,,,https://www.openstreetmap.org/node/6132278001
+osm-node-6193900039,6193900039,Latehar,23.7229732,84.4736893,,full,local,attendant,,,,https://www.openstreetmap.org/node/6193900039
+osm-node-6194674831,6194674831,Latehar,23.8444809,84.1101171,,full,local,attendant,,,,https://www.openstreetmap.org/node/6194674831
+osm-node-6194739442,6194739442,Latehar,23.8163479,84.1990626,,,,,,,,https://www.openstreetmap.org/node/6194739442
+osm-node-6194739443,6194739443,Latehar,23.8163824,84.1990949,,,,,,,,https://www.openstreetmap.org/node/6194739443
+osm-node-6207420035,6207420035,Latehar,23.6998458,84.5220684,,,,,,,,https://www.openstreetmap.org/node/6207420035
+osm-node-6207420036,6207420036,Latehar,23.6998925,84.5220888,,,,,,,,https://www.openstreetmap.org/node/6207420036
+osm-node-6251363854,6251363854,Latehar,23.6764347,84.55833,,,,,,,,https://www.openstreetmap.org/node/6251363854
+osm-node-6251364906,6251364906,Latehar,23.7281586,84.4513161,,,,,,,,https://www.openstreetmap.org/node/6251364906
+osm-node-6251364953,6251364953,Latehar,23.8968712,84.1400547,,,,,,,,https://www.openstreetmap.org/node/6251364953
+osm-node-6251364954,6251364954,Latehar,23.8902348,84.1318295,,,,,,,,https://www.openstreetmap.org/node/6251364954
+osm-node-6251366045,6251366045,Latehar,23.674905,84.7755158,,,,,,,,https://www.openstreetmap.org/node/6251366045
+osm-node-6251366822,6251366822,Latehar,23.8251969,84.1851692,,,,,,,,https://www.openstreetmap.org/node/6251366822
+osm-node-6251366823,6251366823,Latehar,23.840113,84.1390748,,,,,,,,https://www.openstreetmap.org/node/6251366823
+osm-node-6251366884,6251366884,Latehar,23.6617204,84.8557635,,,,,,,,https://www.openstreetmap.org/node/6251366884
+osm-node-6251367091,6251367091,Latehar,23.9232372,84.147992,,,,,,,,https://www.openstreetmap.org/node/6251367091
+osm-node-6698536836,6698536836,Latehar,23.8753901,84.1060442,,,,,,,,https://www.openstreetmap.org/node/6698536836
+osm-node-6698538776,6698538776,Latehar,23.7863831,84.2797033,,,,,,,,https://www.openstreetmap.org/node/6698538776
+osm-node-6698539293,6698539293,Latehar,23.7814901,84.335283,,,,,,,,https://www.openstreetmap.org/node/6698539293
+osm-node-6865056814,6865056814,Latehar,23.8753692,84.1060715,,,,,,,,https://www.openstreetmap.org/node/6865056814
+osm-node-6867993954,6867993954,Latehar,23.9413117,84.1447476,,,,,,,,https://www.openstreetmap.org/node/6867993954
+osm-node-6960352118,6960352118,Latehar,23.6616809,84.8557507,,,,,,,,https://www.openstreetmap.org/node/6960352118
+osm-node-6960352131,6960352131,Latehar,23.6808986,84.7461777,,full,local,attendant,,,,https://www.openstreetmap.org/node/6960352131
+osm-node-6960352132,6960352132,Latehar,23.6809483,84.7461881,,full,local,attendant,,,,https://www.openstreetmap.org/node/6960352132
+osm-node-6960352133,6960352133,Latehar,23.6810034,84.7461909,,full,local,attendant,,,,https://www.openstreetmap.org/node/6960352133
+osm-node-6960352137,6960352137,Latehar,23.6791416,84.7650256,,,,,,,,https://www.openstreetmap.org/node/6960352137
+osm-node-6960352138,6960352138,Latehar,23.6749623,84.7755125,,,,,,,,https://www.openstreetmap.org/node/6960352138
+osm-node-6960352139,6960352139,Latehar,23.6763809,84.5583053,,,,,,,,https://www.openstreetmap.org/node/6960352139
+osm-node-6960352140,6960352140,Latehar,23.7309498,84.4458569,,,,,,,,https://www.openstreetmap.org/node/6960352140
+osm-node-6960352141,6960352141,Latehar,23.7628387,84.4173022,,,,,,,,https://www.openstreetmap.org/node/6960352141
+osm-node-6960352142,6960352142,Latehar,23.7640102,84.3768084,,,,,,,,https://www.openstreetmap.org/node/6960352142
+osm-node-6960352143,6960352143,Latehar,23.7814394,84.3352895,,,,,,,,https://www.openstreetmap.org/node/6960352143
+osm-node-6960352144,6960352144,Latehar,23.7821524,84.3124241,,,,,,,,https://www.openstreetmap.org/node/6960352144
+osm-node-6960352145,6960352145,Latehar,23.7862005,84.2798919,,,,,,,,https://www.openstreetmap.org/node/6960352145
+osm-node-6960352146,6960352146,Latehar,23.8252368,84.1851994,,,,,,,,https://www.openstreetmap.org/node/6960352146
+osm-node-6960352147,6960352147,Latehar,23.8277076,84.1741334,,,,,,,,https://www.openstreetmap.org/node/6960352147
+osm-node-6960352148,6960352148,Latehar,23.8332391,84.1620478,,,,,,,,https://www.openstreetmap.org/node/6960352148
+osm-node-6960352149,6960352149,Latehar,23.8401187,84.1391343,,,,,,,,https://www.openstreetmap.org/node/6960352149
+osm-node-6960352150,6960352150,Latehar,23.8590145,84.1041304,,,,,,,,https://www.openstreetmap.org/node/6960352150
+osm-node-6960352151,6960352151,Latehar,23.8653499,84.1023055,,,,,,,,https://www.openstreetmap.org/node/6960352151
+osm-node-6960352152,6960352152,Latehar,23.8816689,84.1117963,,,,,,,,https://www.openstreetmap.org/node/6960352152
+osm-node-6960352153,6960352153,Latehar,23.8873472,84.1198749,,,,,,,,https://www.openstreetmap.org/node/6960352153
+osm-node-6960352154,6960352154,Latehar,23.8968368,84.1400737,,,,,,,,https://www.openstreetmap.org/node/6960352154
+osm-node-6960352155,6960352155,Latehar,23.9079772,84.1470435,,,,,,,,https://www.openstreetmap.org/node/6960352155
+osm-node-8010173322,8010173322,Latehar,23.6813024,84.7507762,,,,,,,,https://www.openstreetmap.org/node/8010173322
+osm-node-8051541892,8051541892,Latehar,23.6813443,84.7507532,,,,,,,,https://www.openstreetmap.org/node/8051541892
+osm-node-8164470623,8164470623,Latehar,23.8817047,84.1117521,,,,,,,,https://www.openstreetmap.org/node/8164470623
+osm-node-8169887888,8169887888,Latehar,23.8793899,84.1095389,,,,,,,,https://www.openstreetmap.org/node/8169887888
+osm-node-8169887889,8169887889,Latehar,23.8793524,84.1095846,,,,,,,,https://www.openstreetmap.org/node/8169887889
+osm-node-8169887890,8169887890,Latehar,23.8854455,84.1170461,,,,,,,,https://www.openstreetmap.org/node/8169887890
+osm-node-8169887891,8169887891,Latehar,23.8854045,84.1170844,,,,,,,,https://www.openstreetmap.org/node/8169887891
+osm-node-8169887892,8169887892,Latehar,23.8873865,84.1198404,,,,,,,,https://www.openstreetmap.org/node/8169887892
+osm-node-8169887893,8169887893,Latehar,23.8890885,84.1230542,,,,,,,,https://www.openstreetmap.org/node/8169887893
+osm-node-8169887894,8169887894,Latehar,23.8889959,84.1231532,,,,,,,,https://www.openstreetmap.org/node/8169887894
+osm-node-8169887895,8169887895,Latehar,23.8913283,84.1333776,,,,,,,,https://www.openstreetmap.org/node/8169887895
+osm-node-8169887896,8169887896,Latehar,23.8913663,84.1333494,,,,,,,,https://www.openstreetmap.org/node/8169887896
+osm-node-8169887897,8169887897,Latehar,23.8923191,84.1345083,,,,,,,,https://www.openstreetmap.org/node/8169887897
+osm-node-8169887898,8169887898,Latehar,23.8922912,84.1345475,,,,,,,,https://www.openstreetmap.org/node/8169887898
+osm-node-8169887899,8169887899,Latehar,23.9079771,84.1469886,,,,,,,,https://www.openstreetmap.org/node/8169887899
+osm-node-8169887900,8169887900,Latehar,23.9083362,84.1470983,,,,,,,,https://www.openstreetmap.org/node/8169887900
+osm-node-8169887901,8169887901,Latehar,23.9083275,84.1471557,,,,,,,,https://www.openstreetmap.org/node/8169887901
+osm-node-8169887902,8169887902,Latehar,23.9113321,84.147465,,,,,,,,https://www.openstreetmap.org/node/8169887902
+osm-node-8169887903,8169887903,Latehar,23.911355,84.1475173,,,,,,,,https://www.openstreetmap.org/node/8169887903
+osm-node-8169887904,8169887904,Latehar,23.9158408,84.1478443,,,,,,,,https://www.openstreetmap.org/node/8169887904
+osm-node-8169887905,8169887905,Latehar,23.9158592,84.1477819,,,,,,,,https://www.openstreetmap.org/node/8169887905
+osm-node-9366241846,9366241846,Latehar,23.6812036,84.7462072,,full,local,attendant,,,,https://www.openstreetmap.org/node/9366241846
+osm-node-9366241847,9366241847,Latehar,23.681272,84.746208,,full,local,attendant,,,,https://www.openstreetmap.org/node/9366241847
+osm-node-9366241848,9366241848,Latehar,23.681318,84.7462123,,full,local,attendant,,,,https://www.openstreetmap.org/node/9366241848
+osm-node-9366415514,9366415514,Latehar,23.6808523,84.7461386,,full,local,attendant,,,,https://www.openstreetmap.org/node/9366415514
+osm-node-9366419925,9366419925,Latehar,23.6816597,84.7361696,,,,,,,,https://www.openstreetmap.org/node/9366419925
+osm-node-9366419928,9366419928,Latehar,23.6816119,84.736176,,,,,,,,https://www.openstreetmap.org/node/9366419928
+osm-node-9366419935,9366419935,Latehar,23.6810598,84.7461954,,full,local,attendant,,,,https://www.openstreetmap.org/node/9366419935
+osm-node-565562399,565562399,Ranchi,23.2915228,85.3057556,,full,local,attendant,,yes,,https://www.openstreetmap.org/node/565562399
+osm-node-565562428,565562428,Ranchi,23.3412084,85.3044701,,half,,,,,,https://www.openstreetmap.org/node/565562428
+osm-node-565562605,565562605,Ranchi,23.3494398,85.3529097,,full,local,attendant,,,,https://www.openstreetmap.org/node/565562605
+osm-node-565567862,565567862,Ranchi,23.3359394,85.2750826,,,,,,,,https://www.openstreetmap.org/node/565567862
+osm-node-565892916,565892916,Ranchi,23.3327996,85.2536054,,full,local,attendant,,,,https://www.openstreetmap.org/node/565892916
+osm-node-1317054583,1317054583,Ranchi,23.6799805,84.9609454,,,,,,,,https://www.openstreetmap.org/node/1317054583
+osm-node-1339495050,1339495050,Ranchi,23.3394282,85.1593257,,full,local,attendant,,,,https://www.openstreetmap.org/node/1339495050
+osm-node-1863414094,1863414094,Ranchi,23.3844018,85.8668999,,,,,,,,https://www.openstreetmap.org/node/1863414094
+osm-node-1863414096,1863414096,Ranchi,23.3844362,85.8664977,,,,,,,,https://www.openstreetmap.org/node/1863414096
+osm-node-2061795776,2061795776,Ranchi,23.3493345,85.613215,,full,local,attendant,,,,https://www.openstreetmap.org/node/2061795776
+osm-node-2061796077,2061796077,Ranchi,23.3605265,85.5282319,,,,,,,,https://www.openstreetmap.org/node/2061796077
+osm-node-2812175456,2812175456,Ranchi,23.6734994,85.0541739,,full,local,attendant,,,,https://www.openstreetmap.org/node/2812175456
+osm-node-2821317024,2821317024,Ranchi,23.6659135,84.9619211,,,,,,,,https://www.openstreetmap.org/node/2821317024
+osm-node-2821317108,2821317108,Ranchi,23.6698714,85.0171785,,,,,,,,https://www.openstreetmap.org/node/2821317108
+osm-node-2821317156,2821317156,Ranchi,23.6734635,85.0542171,,full,local,attendant,,,,https://www.openstreetmap.org/node/2821317156
+osm-node-2910945239,2910945239,Ranchi,23.3309219,85.2006417,,full,local,attendant,,,,https://www.openstreetmap.org/node/2910945239
+osm-node-3727525373,3727525373,Ranchi,23.349535,85.3431739,,full,,,,,,https://www.openstreetmap.org/node/3727525373
+osm-node-5050810874,5050810874,Ranchi,23.2969637,85.2849355,,no,,,,,,https://www.openstreetmap.org/node/5050810874
+osm-node-5065640584,5065640584,Ranchi,23.3842133,85.8672604,,,,,,,,https://www.openstreetmap.org/node/5065640584
+osm-node-5065640585,5065640585,Ranchi,23.3842305,85.8672336,,,,,,,,https://www.openstreetmap.org/node/5065640585
+osm-node-5065640586,5065640586,Ranchi,23.3842576,85.8671907,,,,,,,,https://www.openstreetmap.org/node/5065640586
+osm-node-5065640587,5065640587,Ranchi,23.3843561,85.8670083,,,,,,,,https://www.openstreetmap.org/node/5065640587
+osm-node-5065640589,5065640589,Ranchi,23.3844398,85.8665523,,,,,,,,https://www.openstreetmap.org/node/5065640589
+osm-node-6178053435,6178053435,Ranchi,23.328195,85.216291,,full,local,attendant,,,,https://www.openstreetmap.org/node/6178053435
+osm-node-6204324235,6204324235,Ranchi,23.6513312,84.9518109,,full,local,attendant,,,,https://www.openstreetmap.org/node/6204324235
+osm-node-6204324236,6204324236,Ranchi,23.6513856,84.9518124,,full,local,attendant,,,,https://www.openstreetmap.org/node/6204324236
+osm-node-6241752301,6241752301,Ranchi,23.3466336,85.3138757,,full,local,attendant,,,,https://www.openstreetmap.org/node/6241752301
+osm-node-6241752308,6241752308,Ranchi,23.3467556,85.3138152,,full,local,attendant,,,,https://www.openstreetmap.org/node/6241752308
+osm-node-6251364615,6251364615,Ranchi,23.6533946,84.9239245,,,,,,,,https://www.openstreetmap.org/node/6251364615
+osm-node-6251365825,6251365825,Ranchi,23.6533639,84.927218,,,,,,,,https://www.openstreetmap.org/node/6251365825
+osm-node-6866726957,6866726957,Ranchi,23.3527492,85.1263331,,,,,,,,https://www.openstreetmap.org/node/6866726957
+osm-node-6960352116,6960352116,Ranchi,23.6533091,84.927227,,,,,,,,https://www.openstreetmap.org/node/6960352116
+osm-node-6960352117,6960352117,Ranchi,23.6532862,84.9239411,,,,,,,,https://www.openstreetmap.org/node/6960352117
+osm-node-7313176901,7313176901,Ranchi,23.6509726,84.9676127,,,,,,,,https://www.openstreetmap.org/node/7313176901
+osm-node-7313176926,7313176926,Ranchi,23.6514829,84.951815,,full,local,attendant,,,,https://www.openstreetmap.org/node/7313176926
+osm-node-7563324372,7563324372,Ranchi,23.3282494,85.213604,,,,,,,,https://www.openstreetmap.org/node/7563324372
+osm-node-7949722122,7949722122,Ranchi,23.305934,85.3090022,,no,,,,,,https://www.openstreetmap.org/node/7949722122
+osm-node-8309632703,8309632703,Ranchi,23.296389,85.2816473,,no,,,,,,https://www.openstreetmap.org/node/8309632703
+osm-node-8309633344,8309633344,Ranchi,23.2897057,85.291029,,,,,,,,https://www.openstreetmap.org/node/8309633344
+osm-node-8309633356,8309633356,Ranchi,23.2921696,85.2823363,,,,,,,,https://www.openstreetmap.org/node/8309633356
+osm-node-8309633360,8309633360,Ranchi,23.2927703,85.2816948,,,,,,,,https://www.openstreetmap.org/node/8309633360
+osm-node-8540513110,8540513110,Ranchi,23.3465876,85.3138943,,full,local,attendant,,,,https://www.openstreetmap.org/node/8540513110
+osm-node-8540517218,8540517218,Ranchi,23.3445724,85.3091392,,,,,,,,https://www.openstreetmap.org/node/8540517218
+osm-node-8540517219,8540517219,Ranchi,23.3445803,85.3094709,,,,,,,,https://www.openstreetmap.org/node/8540517219
+osm-node-8540517220,8540517220,Ranchi,23.3445527,85.3095365,,,,,,,,https://www.openstreetmap.org/node/8540517220
+osm-node-8540517223,8540517223,Ranchi,23.3412372,85.3044198,,half,,,,,,https://www.openstreetmap.org/node/8540517223
+osm-node-8541455651,8541455651,Ranchi,23.3512099,85.3669925,,,,,,,,https://www.openstreetmap.org/node/8541455651
+osm-node-9028532747,9028532747,Ranchi,23.2887427,85.2910502,,,,,,,,https://www.openstreetmap.org/node/9028532747
+osm-node-9030242227,9030242227,Ranchi,23.3685386,85.4407026,,,,,,,,https://www.openstreetmap.org/node/9030242227
+osm-node-9030246243,9030246243,Ranchi,23.3773781,84.9700664,,full,,,,,,https://www.openstreetmap.org/node/9030246243
+osm-node-9030288571,9030288571,Ranchi,23.352148,85.3846188,,,,,,,,https://www.openstreetmap.org/node/9030288571
+osm-node-9031045111,9031045111,Ranchi,23.3732995,85.0664113,,full,local,attendant,,,,https://www.openstreetmap.org/node/9031045111
+osm-node-9031770852,9031770852,Ranchi,23.3498372,85.8445748,,full,,attendant,,,,https://www.openstreetmap.org/node/9031770852
+osm-node-9031900822,9031900822,Ranchi,23.3522986,85.8551907,,full,local,attendant,,,,https://www.openstreetmap.org/node/9031900822
+osm-node-9033772408,9033772408,Ranchi,23.3769992,85.8686761,,,,,,,,https://www.openstreetmap.org/node/9033772408
+osm-node-9034027983,9034027983,Ranchi,23.3573119,85.8640393,,,,,,,,https://www.openstreetmap.org/node/9034027983
+osm-node-9034132156,9034132156,Ranchi,23.3562426,85.8690061,,,,,,,,https://www.openstreetmap.org/node/9034132156
+osm-node-9036728513,9036728513,Ranchi,23.3675131,85.0899823,,,,,,,,https://www.openstreetmap.org/node/9036728513
+osm-node-9036856076,9036856076,Ranchi,23.3552339,85.7223406,,,,,,,,https://www.openstreetmap.org/node/9036856076
+osm-node-9036856081,9036856081,Ranchi,23.3552788,85.7223734,,,,,,,,https://www.openstreetmap.org/node/9036856081
+osm-node-9036856685,9036856685,Ranchi,23.3637067,85.4756161,,,,,,,,https://www.openstreetmap.org/node/9036856685
+osm-node-9036877946,9036877946,Ranchi,23.3611499,85.4856786,,,,,,,,https://www.openstreetmap.org/node/9036877946
+osm-node-9037712309,9037712309,Ranchi,23.283933,85.303123,,,,,,,,https://www.openstreetmap.org/node/9037712309
+osm-node-9037841993,9037841993,Ranchi,23.360436,85.6942873,,,,,,,,https://www.openstreetmap.org/node/9037841993
+osm-node-9037885449,9037885449,Ranchi,23.3539641,85.6938024,,,,,,,,https://www.openstreetmap.org/node/9037885449
+osm-node-9037984478,9037984478,Ranchi,23.3814205,84.9543847,,,,,,,,https://www.openstreetmap.org/node/9037984478
+osm-node-9039594264,9039594264,Ranchi,23.3758013,85.018504,,,,,,,,https://www.openstreetmap.org/node/9039594264
+osm-node-9040287787,9040287787,Ranchi,23.373633,85.4446522,,,,,,,,https://www.openstreetmap.org/node/9040287787
+osm-node-9040481725,9040481725,Ranchi,23.3495696,85.5912284,,,,,,,,https://www.openstreetmap.org/node/9040481725
+osm-node-9049774733,9049774733,Ranchi,23.4918387,85.3994288,,,,,,,,https://www.openstreetmap.org/node/9049774733
+osm-node-9050189695,9050189695,Ranchi,23.3481911,85.1376415,,,,,,,,https://www.openstreetmap.org/node/9050189695
+osm-node-9050679802,9050679802,Ranchi,23.3596478,85.1092716,,,,,,,,https://www.openstreetmap.org/node/9050679802
+osm-node-9052319436,9052319436,Ranchi,23.3528794,85.8159443,,full,local,attendant,,,,https://www.openstreetmap.org/node/9052319436
+osm-node-9052419617,9052419617,Ranchi,23.3668615,85.7940232,,full,local,attendant,,,,https://www.openstreetmap.org/node/9052419617
+osm-node-9052556038,9052556038,Ranchi,23.3565688,85.6623283,,,,,,,,https://www.openstreetmap.org/node/9052556038
+osm-node-9052939502,9052939502,Ranchi,23.3602317,85.5021474,,double_half,local,attendant,,,,https://www.openstreetmap.org/node/9052939502
+osm-node-9053101721,9053101721,Ranchi,23.3519326,85.6438535,,,,,,,,https://www.openstreetmap.org/node/9053101721
+osm-node-9053145230,9053145230,Ranchi,23.3568901,85.6355345,,,,,,,,https://www.openstreetmap.org/node/9053145230
+osm-node-9053265493,9053265493,Ranchi,23.3672371,85.4706859,,,,,,,,https://www.openstreetmap.org/node/9053265493
+osm-node-9057601375,9057601375,Ranchi,23.3508996,85.8333717,,full,local,attendant,,,,https://www.openstreetmap.org/node/9057601375
+osm-node-9061445631,9061445631,Ranchi,23.6515958,84.9594913,,,,,,,,https://www.openstreetmap.org/node/9061445631
+osm-node-9061641073,9061641073,Ranchi,23.5557818,85.407681,,,,,,,,https://www.openstreetmap.org/node/9061641073
+osm-node-9062029067,9062029067,Ranchi,23.6917894,85.2118453,,,,,,,,https://www.openstreetmap.org/node/9062029067
+osm-node-9062029068,9062029068,Ranchi,23.6917853,85.2119048,,,,,,,,https://www.openstreetmap.org/node/9062029068
+osm-node-9062140947,9062140947,Ranchi,23.6962549,85.1866463,,,,,,,,https://www.openstreetmap.org/node/9062140947
+osm-node-9062140948,9062140948,Ranchi,23.6962016,85.1866359,,,,,,,,https://www.openstreetmap.org/node/9062140948
+osm-node-9065135273,9065135273,Ranchi,23.6596341,85.0277498,,,,,,,,https://www.openstreetmap.org/node/9065135273
+osm-node-9069129002,9069129002,Ranchi,23.6745553,85.219583,,,,,,,,https://www.openstreetmap.org/node/9069129002
+osm-node-9069161724,9069161724,Ranchi,23.6745986,85.2196074,,,,,,,,https://www.openstreetmap.org/node/9069161724
+osm-node-9069167839,9069167839,Ranchi,23.6764279,85.2138718,,,,,,,,https://www.openstreetmap.org/node/9069167839
+osm-node-9069167885,9069167885,Ranchi,23.676527,85.2139363,,,,,,,,https://www.openstreetmap.org/node/9069167885
+osm-node-9075763527,9075763527,Ranchi,23.6829918,84.9655064,,,,,,,,https://www.openstreetmap.org/node/9075763527
+osm-node-9075934085,9075934085,Ranchi,23.6870676,84.9695331,,,,,,,,https://www.openstreetmap.org/node/9075934085
+osm-node-9086089850,9086089850,Ranchi,23.6953414,84.9695985,,,,,,,,https://www.openstreetmap.org/node/9086089850
+osm-node-9221648778,9221648778,Ranchi,23.377084,85.8686196,,,,,,,,https://www.openstreetmap.org/node/9221648778
+osm-node-9221648781,9221648781,Ranchi,23.3771878,85.8685504,,,,,,,,https://www.openstreetmap.org/node/9221648781
+osm-node-9221648808,9221648808,Ranchi,23.3771254,85.868592,,,,,,,,https://www.openstreetmap.org/node/9221648808
+osm-node-9221688423,9221688423,Ranchi,23.3770496,85.8686425,,,,,,,,https://www.openstreetmap.org/node/9221688423
+osm-node-9232354909,9232354909,Ranchi,23.3130985,85.3077855,,no,,,,,,https://www.openstreetmap.org/node/9232354909
+osm-node-9232354911,9232354911,Ranchi,23.3060342,85.3091917,,no,,,,,,https://www.openstreetmap.org/node/9232354911
+osm-node-9232462560,9232462560,Ranchi,23.306042,85.3092245,,no,,,,,,https://www.openstreetmap.org/node/9232462560
+osm-node-9232462566,9232462566,Ranchi,23.3060236,85.3091471,,no,,,,,,https://www.openstreetmap.org/node/9232462566
+osm-node-9232462572,9232462572,Ranchi,23.3059448,85.3090404,,no,,,,,,https://www.openstreetmap.org/node/9232462572
+osm-node-9232462575,9232462575,Ranchi,23.3131034,85.3078529,,no,,,,,,https://www.openstreetmap.org/node/9232462575
+osm-node-9232462596,9232462596,Ranchi,23.3122358,85.3073269,,no,,,,,,https://www.openstreetmap.org/node/9232462596
+osm-node-9232462597,9232462597,Ranchi,23.3122451,85.3073866,,no,,,,,,https://www.openstreetmap.org/node/9232462597
+osm-node-9232532317,9232532317,Ranchi,23.3131486,85.3071923,,no,,,,,,https://www.openstreetmap.org/node/9232532317
+osm-node-9232532329,9232532329,Ranchi,23.3131499,85.3071535,,no,,,,,,https://www.openstreetmap.org/node/9232532329
+osm-node-9233007077,9233007077,Ranchi,23.3060655,85.3092824,,no,,,,,,https://www.openstreetmap.org/node/9233007077
+osm-node-9233007085,9233007085,Ranchi,23.3069156,85.3084004,,no,,,,,,https://www.openstreetmap.org/node/9233007085
+osm-node-9233007089,9233007089,Ranchi,23.3122544,85.3074463,,no,,,,,,https://www.openstreetmap.org/node/9233007089
+osm-node-9233007099,9233007099,Ranchi,23.3130916,85.3076881,,no,,,,,,https://www.openstreetmap.org/node/9233007099
+osm-node-9233007105,9233007105,Ranchi,23.3130957,85.3077449,,no,,,,,,https://www.openstreetmap.org/node/9233007105
+osm-node-9233007108,9233007108,Ranchi,23.3059033,85.3088938,,no,,,,,,https://www.openstreetmap.org/node/9233007108
+osm-node-9233007112,9233007112,Ranchi,23.3130823,85.307557,,no,,,,,,https://www.openstreetmap.org/node/9233007112
+osm-node-9233016272,9233016272,Ranchi,23.3069255,85.3084648,,no,,,,,,https://www.openstreetmap.org/node/9233016272
+osm-node-9233016276,9233016276,Ranchi,23.3130679,85.3073556,,no,,,,,,https://www.openstreetmap.org/node/9233016276
+osm-node-9233016284,9233016284,Ranchi,23.3130855,85.3076028,,no,,,,,,https://www.openstreetmap.org/node/9233016284
+osm-node-9233016288,9233016288,Ranchi,23.3130638,85.307299,,no,,,,,,https://www.openstreetmap.org/node/9233016288
+osm-node-9233016291,9233016291,Ranchi,23.313119,85.3080716,,no,,,,,,https://www.openstreetmap.org/node/9233016291
+osm-node-9233016292,9233016292,Ranchi,23.3131184,85.3080634,,no,,,,,,https://www.openstreetmap.org/node/9233016292
+osm-node-9233016293,9233016293,Ranchi,23.3131163,85.3080343,,no,,,,,,https://www.openstreetmap.org/node/9233016293
+osm-node-9233016294,9233016294,Ranchi,23.3131121,85.3079754,,no,,,,,,https://www.openstreetmap.org/node/9233016294
+osm-node-9233016295,9233016295,Ranchi,23.3131115,85.3079667,,no,,,,,,https://www.openstreetmap.org/node/9233016295
+osm-node-9233016297,9233016297,Ranchi,23.3131067,85.3079005,,no,,,,,,https://www.openstreetmap.org/node/9233016297
+osm-node-9233022986,9233022986,Ranchi,23.3141551,85.3051584,,no,,,,,,https://www.openstreetmap.org/node/9233022986
+osm-node-9233022987,9233022987,Ranchi,23.3141696,85.3051255,,no,,,,,,https://www.openstreetmap.org/node/9233022987
+osm-node-9233022988,9233022988,Ranchi,23.314231,85.3050057,,no,,,,,,https://www.openstreetmap.org/node/9233022988
+osm-node-9233558769,9233558769,Ranchi,23.2886141,85.2910531,,,,,,,,https://www.openstreetmap.org/node/9233558769
+osm-node-9233561577,9233561577,Ranchi,23.3031476,85.2954781,,,,,,,,https://www.openstreetmap.org/node/9233561577
+osm-node-9233561581,9233561581,Ranchi,23.3032166,85.2927338,,,,,,,,https://www.openstreetmap.org/node/9233561581
+osm-node-9233561585,9233561585,Ranchi,23.3032004,85.2954768,,,,,,,,https://www.openstreetmap.org/node/9233561585
+osm-node-9233561587,9233561587,Ranchi,23.3031439,85.2927332,,,,,,,,https://www.openstreetmap.org/node/9233561587
+osm-node-9233840295,9233840295,Ranchi,23.2951854,85.286433,,no,,,,,,https://www.openstreetmap.org/node/9233840295
+osm-node-9233840299,9233840299,Ranchi,23.2951572,85.2849695,,no,,,,,,https://www.openstreetmap.org/node/9233840299
+osm-node-9233840302,9233840302,Ranchi,23.2950675,85.284497,,no,,,,,,https://www.openstreetmap.org/node/9233840302
+osm-node-9233840305,9233840305,Ranchi,23.2951314,85.2864331,,no,,,,,,https://www.openstreetmap.org/node/9233840305
+osm-node-9233840308,9233840308,Ranchi,23.2950526,85.2844972,,no,,,,,,https://www.openstreetmap.org/node/9233840308
+osm-node-9233840309,9233840309,Ranchi,23.2950648,85.2828124,,no,,,,,,https://www.openstreetmap.org/node/9233840309
+osm-node-9233840310,9233840310,Ranchi,23.2950478,85.281682,,no,,,,,,https://www.openstreetmap.org/node/9233840310
+osm-node-9233840315,9233840315,Ranchi,23.2962884,85.2827928,,no,,,,,,https://www.openstreetmap.org/node/9233840315
+osm-node-9233840316,9233840316,Ranchi,23.2962844,85.2816467,,no,,,,,,https://www.openstreetmap.org/node/9233840316
+osm-node-9233871201,9233871201,Ranchi,23.2886128,85.287119,,,,,,,,https://www.openstreetmap.org/node/9233871201
+osm-node-9233871204,9233871204,Ranchi,23.2908842,85.2871106,,,,,,,,https://www.openstreetmap.org/node/9233871204
+osm-node-9233871205,9233871205,Ranchi,23.2908866,85.2910196,,,,,,,,https://www.openstreetmap.org/node/9233871205
+osm-node-9233871206,9233871206,Ranchi,23.2908866,85.2935977,,,,,,,,https://www.openstreetmap.org/node/9233871206
+osm-node-9233871209,9233871209,Ranchi,23.2908794,85.296665,,,,,,,,https://www.openstreetmap.org/node/9233871209
+osm-node-9233878070,9233878070,Ranchi,23.2946805,85.2844952,,no,,,,,,https://www.openstreetmap.org/node/9233878070
+osm-node-9233878072,9233878072,Ranchi,23.2946596,85.2828256,,no,,,,,,https://www.openstreetmap.org/node/9233878072
+osm-node-9233878073,9233878073,Ranchi,23.2946606,85.2825541,,no,,,,,,https://www.openstreetmap.org/node/9233878073
+osm-node-9233878078,9233878078,Ranchi,23.2946794,85.2849984,,no,,,,,,https://www.openstreetmap.org/node/9233878078
+osm-node-9233878091,9233878091,Ranchi,23.295182,85.284969,,no,,,,,,https://www.openstreetmap.org/node/9233878091
+osm-node-9233878092,9233878092,Ranchi,23.2951831,85.2844955,,no,,,,,,https://www.openstreetmap.org/node/9233878092
+osm-node-9233878107,9233878107,Ranchi,23.2930029,85.2816917,,,,,,,,https://www.openstreetmap.org/node/9233878107
+osm-node-9233883973,9233883973,Ranchi,23.2909138,85.2844644,,,,,,,,https://www.openstreetmap.org/node/9233883973
+osm-node-9233883977,9233883977,Ranchi,23.2908362,85.2871103,,,,,,,,https://www.openstreetmap.org/node/9233883977
+osm-node-9233883981,9233883981,Ranchi,23.2908337,85.2910201,,,,,,,,https://www.openstreetmap.org/node/9233883981
+osm-node-9233883985,9233883985,Ranchi,23.2908324,85.2966649,,,,,,,,https://www.openstreetmap.org/node/9233883985
+osm-node-9233883989,9233883989,Ranchi,23.2908184,85.2935991,,,,,,,,https://www.openstreetmap.org/node/9233883989
+osm-node-9233883995,9233883995,Ranchi,23.2907892,85.3001633,,,,,,,,https://www.openstreetmap.org/node/9233883995
+osm-node-9233884009,9233884009,Ranchi,23.2907058,85.2844663,,,,,,,,https://www.openstreetmap.org/node/9233884009
+osm-node-9233884010,9233884010,Ranchi,23.2908419,85.2844658,,,,,,,,https://www.openstreetmap.org/node/9233884010
+osm-node-9233884011,9233884011,Ranchi,23.290858,85.2844644,,,,,,,,https://www.openstreetmap.org/node/9233884011
+osm-node-9233885327,9233885327,Ranchi,23.2886263,85.2895305,,,,,,,,https://www.openstreetmap.org/node/9233885327
+osm-node-9233885330,9233885330,Ranchi,23.2885905,85.2895307,,,,,,,,https://www.openstreetmap.org/node/9233885330
+osm-node-9233885335,9233885335,Ranchi,23.2887207,85.2871168,,,,,,,,https://www.openstreetmap.org/node/9233885335
+osm-node-9233885522,9233885522,Ranchi,23.291788,85.3001182,,,,,,,,https://www.openstreetmap.org/node/9233885522
+osm-node-9233885527,9233885527,Ranchi,23.2919038,85.2974626,,,,,,,,https://www.openstreetmap.org/node/9233885527
+osm-node-9233885570,9233885570,Ranchi,23.2904629,85.2966555,,,,,,,,https://www.openstreetmap.org/node/9233885570
+osm-node-9233885572,9233885572,Ranchi,23.2904894,85.3001716,,,,,,,,https://www.openstreetmap.org/node/9233885572
+osm-node-9233885583,9233885583,Ranchi,23.2945922,85.286439,,no,,,,,,https://www.openstreetmap.org/node/9233885583
+osm-node-9233885647,9233885647,Ranchi,23.2970013,85.2864299,,no,,,,,,https://www.openstreetmap.org/node/9233885647
+osm-node-9233885653,9233885653,Ranchi,23.2965872,85.2837752,,no,,,,,,https://www.openstreetmap.org/node/9233885653
+osm-node-9233885666,9233885666,Ranchi,23.2946672,85.2816757,,no,,,,,,https://www.openstreetmap.org/node/9233885666
+osm-node-9233954809,9233954809,Ranchi,23.3069036,85.308324,,no,,,,,,https://www.openstreetmap.org/node/9233954809
+osm-node-9233954810,9233954810,Ranchi,23.3069026,85.3083156,,no,,,,,,https://www.openstreetmap.org/node/9233954810
+osm-node-9233954811,9233954811,Ranchi,23.3068966,85.3082766,,no,,,,,,https://www.openstreetmap.org/node/9233954811
+osm-node-9233954812,9233954812,Ranchi,23.3068961,85.3082733,,no,,,,,,https://www.openstreetmap.org/node/9233954812
+osm-node-9233992171,9233992171,Ranchi,23.3123297,85.3068054,,no,,,,,,https://www.openstreetmap.org/node/9233992171
+osm-node-9233992175,9233992175,Ranchi,23.3137116,85.3066059,,no,,,,,,https://www.openstreetmap.org/node/9233992175
+osm-node-9233992181,9233992181,Ranchi,23.3123194,85.3067559,,no,,,,,,https://www.openstreetmap.org/node/9233992181
+osm-node-9233992185,9233992185,Ranchi,23.3137035,85.306536,,no,,,,,,https://www.openstreetmap.org/node/9233992185
+osm-node-9233992192,9233992192,Ranchi,23.3131564,85.3072284,,no,,,,,,https://www.openstreetmap.org/node/9233992192
+osm-node-9233992202,9233992202,Ranchi,23.312328,85.3069687,,no,,,,,,https://www.openstreetmap.org/node/9233992202
+osm-node-9233992204,9233992204,Ranchi,23.3123032,85.306681,,no,,,,,,https://www.openstreetmap.org/node/9233992204
+osm-node-9233992205,9233992205,Ranchi,23.3122927,85.3066219,,no,,,,,,https://www.openstreetmap.org/node/9233992205
+osm-node-9233992209,9233992209,Ranchi,23.3136943,85.3064556,,no,,,,,,https://www.openstreetmap.org/node/9233992209
+osm-node-9233992210,9233992210,Ranchi,23.3136844,85.3064013,,no,,,,,,https://www.openstreetmap.org/node/9233992210
+osm-node-9233992213,9233992213,Ranchi,23.3059137,85.3089304,,no,,,,,,https://www.openstreetmap.org/node/9233992213
+osm-node-9233993293,9233993293,Ranchi,23.3122637,85.307506,,no,,,,,,https://www.openstreetmap.org/node/9233993293
+osm-node-9233996838,9233996838,Ranchi,23.3143554,85.3059158,,no,,,,,,https://www.openstreetmap.org/node/9233996838
+osm-node-9233996850,9233996850,Ranchi,23.3143507,85.3059855,,no,,,,,,https://www.openstreetmap.org/node/9233996850
+osm-node-9233996927,9233996927,Ranchi,23.3086843,85.3065011,,no,,,,,,https://www.openstreetmap.org/node/9233996927
+osm-node-9233996928,9233996928,Ranchi,23.3086828,85.3065399,,no,,,,,,https://www.openstreetmap.org/node/9233996928
+osm-node-9233996934,9233996934,Ranchi,23.3143578,85.3058809,,no,,,,,,https://www.openstreetmap.org/node/9233996934
+osm-node-9233996935,9233996935,Ranchi,23.3147037,85.3062401,,no,,,,,,https://www.openstreetmap.org/node/9233996935
+osm-node-9233996938,9233996938,Ranchi,23.311591,85.3071018,,no,,,,,,https://www.openstreetmap.org/node/9233996938
+osm-node-9233996939,9233996939,Ranchi,23.3115827,85.3070322,,no,,,,,,https://www.openstreetmap.org/node/9233996939
+osm-node-9233996941,9233996941,Ranchi,23.311607,85.3069102,,no,,,,,,https://www.openstreetmap.org/node/9233996941
+osm-node-9233996943,9233996943,Ranchi,23.311603,85.3068473,,no,,,,,,https://www.openstreetmap.org/node/9233996943
+osm-node-9233996952,9233996952,Ranchi,23.3147132,85.3061707,,no,,,,,,https://www.openstreetmap.org/node/9233996952
+osm-node-9233997118,9233997118,Ranchi,23.3143531,85.3059506,,no,,,,,,https://www.openstreetmap.org/node/9233997118
+osm-node-9234107360,9234107360,Ranchi,23.3736594,85.4445968,,,,,,,,https://www.openstreetmap.org/node/9234107360
+osm-node-9300477061,9300477061,Ranchi,23.3528324,85.8159673,,full,local,attendant,,,,https://www.openstreetmap.org/node/9300477061
+osm-node-9300477074,9300477074,Ranchi,23.3508635,85.8333683,,full,local,attendant,,,,https://www.openstreetmap.org/node/9300477074
+osm-node-9300477076,9300477076,Ranchi,23.3497865,85.8445676,,full,,attendant,,,,https://www.openstreetmap.org/node/9300477076
+osm-node-9300477085,9300477085,Ranchi,23.3522814,85.8552441,,full,local,attendant,,,,https://www.openstreetmap.org/node/9300477085
+osm-node-9300477086,9300477086,Ranchi,23.3572763,85.8641083,,,,,,,,https://www.openstreetmap.org/node/9300477086
+osm-node-9300477644,9300477644,Ranchi,23.3668254,85.7940099,,full,local,attendant,,,,https://www.openstreetmap.org/node/9300477644
+osm-node-9403326272,9403326272,Ranchi,23.3340696,85.1853356,,no,,,,,,https://www.openstreetmap.org/node/9403326272
+osm-node-9403436100,9403436100,Ranchi,23.3580821,85.4071321,,,,,,,,https://www.openstreetmap.org/node/9403436100
+osm-node-9403707873,9403707873,Ranchi,23.3511716,85.3670022,,,,,,,,https://www.openstreetmap.org/node/9403707873
+osm-node-9403752005,9403752005,Ranchi,23.3495729,85.3431423,,,,,,,,https://www.openstreetmap.org/node/9403752005
+osm-node-9403752013,9403752013,Ranchi,23.3494978,85.3431986,,,,,,,,https://www.openstreetmap.org/node/9403752013
+osm-node-9403752523,9403752523,Ranchi,23.3493717,85.3529555,,full,local,attendant,,,,https://www.openstreetmap.org/node/9403752523
+osm-node-9403752666,9403752666,Ranchi,23.3580313,85.4071483,,,,,,,,https://www.openstreetmap.org/node/9403752666
+osm-node-9403752688,9403752688,Ranchi,23.3510811,85.367025,,,,,,,,https://www.openstreetmap.org/node/9403752688
+osm-node-9403752700,9403752700,Ranchi,23.3520522,85.384633,,,,,,,,https://www.openstreetmap.org/node/9403752700
+osm-node-9441924874,9441924874,Ranchi,23.6512552,84.9518089,,full,local,attendant,,,,https://www.openstreetmap.org/node/9441924874
+osm-node-9442684171,9442684171,Ranchi,23.6620488,84.962553,,no,,,,,,https://www.openstreetmap.org/node/9442684171
+osm-node-9442684172,9442684172,Ranchi,23.6620909,84.9626237,,no,,,,,,https://www.openstreetmap.org/node/9442684172
+osm-node-9442695346,9442695346,Ranchi,23.6903019,84.969659,,no,,,,,,https://www.openstreetmap.org/node/9442695346
+osm-node-9691992502,9691992502,Ranchi,23.3364458,85.2916289,,,,,,,,https://www.openstreetmap.org/node/9691992502
+osm-node-10748090731,10748090731,Ranchi,23.3631428,85.5712092,,,,,,,,https://www.openstreetmap.org/node/10748090731
+osm-node-12175341066,12175341066,Ranchi,23.2990014,85.3073177,,,,,,,,https://www.openstreetmap.org/node/12175341066
+osm-node-12175341084,12175341084,Ranchi,23.2990918,85.3074124,,,,,,,,https://www.openstreetmap.org/node/12175341084
