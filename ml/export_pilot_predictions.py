@@ -109,9 +109,6 @@ def export(limit: int | None = None) -> Path:
     
     OUTPUT_PATH.write_text(json.dumps(output, separators=(",", ":")) + "\n", encoding="utf-8")
     
-    # Also write a duplicate to public/crossings.json for compatibility with other demos
-    (ROOT / "public" / "crossings.json").write_text(json.dumps(output, separators=(",", ":")) + "\n", encoding="utf-8")
-    
     return OUTPUT_PATH
 
 
