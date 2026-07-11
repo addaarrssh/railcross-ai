@@ -2,6 +2,10 @@
 
 RailCross is a railway-crossing-aware navigation system that combines machine learning, train schedules, crowdsourced reports, and traffic queries. It predicts whether a level crossing gate is OPEN or CLOSED, estimates remaining closure time using discrete-time survival analysis, and recommends risk-aware commute routing.
 
+## Live Demo
+
+Visit the deployed application: [railcross-ai.adarshprivate678.workers.dev](https://railcross-ai.adarshprivate678.workers.dev)
+
 **Current evidence is synthetic only.** The model is trained and tested on a reproducible event-driven simulator, not real gate telemetry. See [ML project documentation](docs/ML_PROJECT.md) and the [field-validation protocol](docs/PILOT_VALIDATION_PROTOCOL.md) before making any operational or accuracy claim.
 
 ## Key Features Built & Implemented
