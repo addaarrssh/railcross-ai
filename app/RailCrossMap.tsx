@@ -46,6 +46,69 @@ type CrossingMapPayload = {
   crossings: MapCrossing[];
 };
 
+type CrossingMarkerGroup = {
+  id: string;
+  lat: number;
+  lng: number;
+  district: string;
+  crossings: MapCrossing[];
+  predictedStatus: "OPEN" | "CLOSED" | "MIXED";
+};
+
+function distanceInMeters(
+  first: Pick<MapCrossing, "lat" | "lng">,
+  second: Pick<MapCrossing, "lat" | "lng">,
+): number {
+  const earthRadiusMeters = 6_371_000;
+  const latitudeDelta = ((second.lat - first.lat) * Math.PI) / 180;
+  const longitudeDelta = ((second.lng - first.lng) * Math.PI) / 180;
+  const latitudeRadians = (first.lat * Math.PI) / 180;
+  const secondLatitudeRadians = (second.lat * Math.PI) / 180;
+  const haversine =
+    Math.sin(latitudeDelta / 2) ** 2 +
+    Math.cos(latitudeRadians) *
+      Math.cos(secondLatitudeRadians) *
+      Math.sin(longitudeDelta / 2) ** 2;
+
+  return earthRadiusMeters * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+}
+
+function groupNearbyCrossings(crossings: MapCrossing[], radiusMeters = 45): CrossingMarkerGroup[] {
+  const groups: CrossingMarkerGroup[] = [];
+
+  for (const crossing of crossings) {
+    const nearbyGroup = groups.find((group) =>
+      distanceInMeters(crossing, group) <= radiusMeters,
+    );
+
+    if (nearbyGroup) {
+      nearbyGroup.crossings.push(crossing);
+      nearbyGroup.lat =
+        nearbyGroup.crossings.reduce((sum, item) => sum + item.lat, 0) /
+        nearbyGroup.crossings.length;
+      nearbyGroup.lng =
+        nearbyGroup.crossings.reduce((sum, item) => sum + item.lng, 0) /
+        nearbyGroup.crossings.length;
+      nearbyGroup.predictedStatus =
+        new Set(nearbyGroup.crossings.map((item) => item.prediction.predicted_status)).size > 1
+          ? "MIXED"
+          : nearbyGroup.crossings[0].prediction.predicted_status;
+      continue;
+    }
+
+    groups.push({
+      id: crossing.id,
+      lat: crossing.lat,
+      lng: crossing.lng,
+      district: crossing.district,
+      crossings: [crossing],
+      predictedStatus: crossing.prediction.predicted_status,
+    });
+  }
+
+  return groups;
+}
+
 function loadGoogleMaps(apiKey: string): Promise<void> {
   if (window.google?.maps) return Promise.resolve();
   if (googleMapsPromise) return googleMapsPromise;
@@ -75,6 +138,7 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
   const [error, setError] = useState("");
   const [crossings, setCrossings] = useState<MapCrossing[]>([]);
   const [crossingCount, setCrossingCount] = useState(0);
+  const [markerGroupCount, setMarkerGroupCount] = useState(0);
   const [crossingsVisible, setCrossingsVisible] = useState(false);
   
   const [origin, setOrigin] = useState<google.maps.LatLng | null>(null);
@@ -130,36 +194,41 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         const crossingPayload = (await crossingResponse.json()) as CrossingMapPayload;
         if (cancelled) return;
 
-        setCrossings(crossingPayload.crossings || []);
+        const crossingRecords = crossingPayload.crossings || [];
+        const markerGroups = groupNearbyCrossings(crossingRecords);
+        setCrossings(crossingRecords);
+        setMarkerGroupCount(markerGroups.length);
 
         const crossingLayer = new google.maps.Data();
         const crossingBounds = new google.maps.LatLngBounds();
         crossingLayer.addGeoJson({
           type: "FeatureCollection",
-          features: crossingPayload.crossings.map((crossing) => {
-            crossingBounds.extend({ lat: crossing.lat, lng: crossing.lng });
+          features: markerGroups.map((group) => {
+            const [representativeCrossing] = group.crossings;
+            crossingBounds.extend({ lat: group.lat, lng: group.lng });
             return {
               type: "Feature",
               geometry: {
                 type: "Point",
-                coordinates: [crossing.lng, crossing.lat],
+                coordinates: [group.lng, group.lat],
               },
               properties: {
-                id: crossing.id,
-                district: crossing.district,
-                osm_node_id: crossing.osm_node_id,
-                barrier: crossing.barrier,
-                predicted_status: crossing.prediction.predicted_status,
-                closed_probability: crossing.prediction.closed_probability,
-                predicted_minutes_until_open: crossing.prediction.predicted_minutes_until_open,
-                approach_a_speed_kph: crossing.traffic_snapshot.approach_a_speed_kph,
-                approach_b_speed_kph: crossing.traffic_snapshot.approach_b_speed_kph,
-                approach_a_movement: crossing.traffic_snapshot.approach_a_movement,
-                approach_b_movement: crossing.traffic_snapshot.approach_b_movement,
-                queue_a_vehicles: crossing.traffic_snapshot.queue_a_vehicles,
-                queue_b_vehicles: crossing.traffic_snapshot.queue_b_vehicles,
-                queue_growth: crossing.traffic_snapshot.queue_growth_vehicles_per_minute,
-                congestion_age_minutes: crossing.traffic_snapshot.congestion_age_minutes,
+                id: representativeCrossing.id,
+                district: group.district,
+                osm_node_ids: group.crossings.map((item) => item.osm_node_id).join(", "),
+                record_count: group.crossings.length,
+                predicted_status: group.predictedStatus,
+                closed_probability: representativeCrossing.prediction.closed_probability,
+                predicted_minutes_until_open:
+                  representativeCrossing.prediction.predicted_minutes_until_open,
+                approach_a_speed_kph: representativeCrossing.traffic_snapshot.approach_a_speed_kph,
+                approach_b_speed_kph: representativeCrossing.traffic_snapshot.approach_b_speed_kph,
+                approach_a_movement: representativeCrossing.traffic_snapshot.approach_a_movement,
+                approach_b_movement: representativeCrossing.traffic_snapshot.approach_b_movement,
+                queue_a_vehicles: representativeCrossing.traffic_snapshot.queue_a_vehicles,
+                queue_b_vehicles: representativeCrossing.traffic_snapshot.queue_b_vehicles,
+                queue_growth:
+                  representativeCrossing.traffic_snapshot.queue_growth_vehicles_per_minute,
               },
             };
           }),
@@ -167,7 +236,8 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         
         crossingLayer.setStyle((feature) => {
           const status = feature.getProperty("predicted_status");
-          const fillColor = status === "CLOSED" ? "#d93025" : "#188038";
+          const fillColor =
+            status === "MIXED" ? "#f9ab00" : status === "CLOSED" ? "#d93025" : "#188038";
           return {
             icon: {
               path: google.maps.SymbolPath.CIRCLE,
@@ -187,20 +257,35 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
           const probability = Number(feature.getProperty("closed_probability"));
           const minutesUntilOpen = Number(feature.getProperty("predicted_minutes_until_open"));
           const crossingId = String(feature.getProperty("id"));
+          const recordCount = Number(feature.getProperty("record_count"));
 
           const popup = document.createElement("article");
           popup.className = "prediction-popup";
           const title = document.createElement("h2");
-          title.textContent = `Railway crossing ${feature.getProperty("osm_node_id")}`;
+          title.textContent =
+            recordCount > 1
+              ? `Railway crossing area (${recordCount} mapped records)`
+              : `Railway crossing ${feature.getProperty("osm_node_ids")}`;
           const location = document.createElement("p");
           location.textContent = String(feature.getProperty("district"));
           const statusBadge = document.createElement("strong");
-          statusBadge.className = status === "CLOSED" ? "prediction-closed" : "prediction-open";
-          statusBadge.textContent = `Model predicts ${status}`;
+          statusBadge.className =
+            status === "MIXED"
+              ? "prediction-mixed"
+              : status === "CLOSED"
+                ? "prediction-closed"
+                : "prediction-open";
+          statusBadge.textContent =
+            status === "MIXED"
+              ? "Nearby records have mixed demo predictions"
+              : `Model predicts ${status}`;
           const confidence = document.createElement("p");
-          confidence.textContent = `${Math.round(probability * 100)}% predicted probability of closure`;
+          confidence.textContent =
+            status === "MIXED"
+              ? "The map groups records within 45 m to avoid showing conflicting colours at one location."
+              : `${Math.round(probability * 100)}% predicted probability of closure`;
           const traffic = document.createElement("p");
-          traffic.textContent = `Approach traffic: ${feature.getProperty("approach_a_movement")} at ${feature.getProperty("approach_a_speed_kph")} km/h · ${feature.getProperty("approach_b_movement")} at ${feature.getProperty("approach_b_speed_kph")} km/h`;
+          traffic.textContent = `Representative traffic snapshot: ${feature.getProperty("approach_a_movement")} at ${feature.getProperty("approach_a_speed_kph")} km/h · ${feature.getProperty("approach_b_movement")} at ${feature.getProperty("approach_b_speed_kph")} km/h`;
           const queue = document.createElement("p");
           queue.textContent = `Estimated queues: ${feature.getProperty("queue_a_vehicles")} + ${feature.getProperty("queue_b_vehicles")} vehicles · growth ${feature.getProperty("queue_growth")} vehicles/min`;
           
@@ -208,27 +293,32 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
           reopening.textContent =
             status === "CLOSED"
               ? `Estimated reopening: ${minutesUntilOpen.toFixed(1)} minutes`
-              : "No crossing delay predicted";
+              : status === "MIXED"
+                ? "Open one of the nearby mapped crossings to verify its actual status."
+                : "No crossing delay predicted";
               
           // Gate report section
           const reportSection = document.createElement("div");
           reportSection.className = "gate-report-section";
-          const reportLabel = document.createElement("span");
-          reportLabel.textContent = "Report actual status:";
-          const openBtn = document.createElement("button");
-          openBtn.className = "gate-report-btn-open";
-          openBtn.textContent = "🟢 Open";
-          openBtn.onclick = () => submitReport(crossingId, "OPEN");
-          const closedBtn = document.createElement("button");
-          closedBtn.className = "gate-report-btn-closed";
-          closedBtn.textContent = "🔴 Closed";
-          closedBtn.onclick = () => submitReport(crossingId, "CLOSED");
-          
-          reportSection.append(reportLabel, openBtn, closedBtn);
+          if (recordCount === 1) {
+            const reportLabel = document.createElement("span");
+            reportLabel.textContent = "Report actual status:";
+            const openBtn = document.createElement("button");
+            openBtn.className = "gate-report-btn-open";
+            openBtn.textContent = "🟢 Open";
+            openBtn.onclick = () => submitReport(crossingId, "OPEN");
+            const closedBtn = document.createElement("button");
+            closedBtn.className = "gate-report-btn-closed";
+            closedBtn.textContent = "🔴 Closed";
+            closedBtn.onclick = () => submitReport(crossingId, "CLOSED");
+            reportSection.append(reportLabel, openBtn, closedBtn);
+          }
 
           const warning = document.createElement("small");
           warning.textContent = "Synthetic model demonstration — not live Google traffic or a verified gate state.";
-          popup.append(title, location, statusBadge, confidence, traffic, queue, reopening, reportSection, warning);
+          popup.append(title, location, statusBadge, confidence, traffic, queue, reopening);
+          if (recordCount === 1) popup.append(reportSection);
+          popup.append(warning);
           
           predictionWindow.setContent(popup);
           predictionWindow.setPosition(event.latLng);
@@ -388,7 +478,8 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         <aside className="prediction-legend" aria-label="Model prediction legend">
           <span><i className="legend-open" /> Predicted open</span>
           <span><i className="legend-closed" /> Predicted closed</span>
-          <small>Traffic-first model demo</small>
+          <span><i className="legend-mixed" /> Nearby records disagree</span>
+          <small>{crossingCount} mapped records shown as {markerGroupCount} location markers</small>
         </aside>
       )}
       {error && <div className="map-error-message">{error}</div>}

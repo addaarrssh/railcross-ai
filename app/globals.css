@@ -122,6 +122,10 @@ body {
   background: #d93025;
 }
 
+.legend-mixed {
+  background: #f9ab00;
+}
+
 .prediction-legend small {
   color: #777;
   font-size: 10px;
@@ -161,6 +165,11 @@ body {
 .prediction-closed {
   color: #a50e0e;
   background: #fce8e6;
+}
+
+.prediction-mixed {
+  color: #7a4e00;
+  background: #fef7e0;
 }
 
 .prediction-popup small {
@@ -790,4 +799,3 @@ body {
   50% { transform: scale(1.1); opacity: 0.7; }
   100% { transform: scale(0.9); opacity: 1; }
 }
-
