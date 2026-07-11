@@ -1,6 +1,6 @@
 # RailCross — ML Systems Prototype
 
-RailCross is a railway-crossing-aware navigation system that combines machine learning, train schedules, crowdsourced reports, and traffic queries. It predicts whether a level crossing gate is OPEN or CLOSED, estimates remaining closure time using discrete-time survival analysis, and recommends risk-aware commute routing.
+RailCross is a railway-crossing-aware navigation system that uses Google-Routes-observable traffic signals to estimate whether a level crossing may be closed, estimate reopening time, and compare commute routes.
 
 ## Live Demo
 
@@ -8,12 +8,14 @@ Visit the deployed application: [railcross-ai.adarshprivate678.workers.dev](http
 
 **Current evidence is synthetic only.** The model is trained and tested on a reproducible event-driven simulator, not real gate telemetry. See [ML project documentation](docs/ML_PROJECT.md) and the [field-validation protocol](docs/PILOT_VALIDATION_PROTOCOL.md) before making any operational or accuracy claim.
 
+The model schema is documented in [Google Routes data contract](docs/GOOGLE_ROUTES_DATA_CONTRACT.md). It mirrors only fields available through the Routes API or values calculated from repeated route polls.
+
 ## Key Features Built & Implemented
 
 1. **Crowdsourced Verification**: Live API endpoint (`/api/reports`) for users to report gate state with geofenced GPS verification (max 500m proximity).
 2. **Real-time Traffic Pipeline**: Standalone poller (`routes_poller.py`) querying Google Routes API, and a realtime inference bridge (`realtime_inference.py`) mapping results to model inputs.
 3. **Discrete-Time Survival Analysis**: Replaced the baseline regressor with a survival classifier predicting reopening curves across multiple time horizons, reporting median reopening time and 80% confidence intervals.
-4. **Bayesian Prior Adjustments**: Integrates train schedule data (`jharkhand_train_schedule.json`) with a Gaussian window prior calculator (`schedule_prior.py`) to refine prediction certainty.
+4. **Google Routes Feature Contract**: Uses traffic-aware duration, static duration, approach traffic classes, and repeated-poll delay persistence; it does not invent device or queue counts.
 5. **Route Comparison**: Interactive UI component (`RouteComparison.tsx`) computing gate-adjusted route ETAs and drawing alternate path risks on the map.
 6. **Web Push Alerts**: Service worker caching and notification manager dropdown (`NotificationManager.tsx`) to schedule commute warnings.
 7. **Production Analytics**: SQLite/D1 database schema (`db/schema.ts`) and history dashboard (`/dashboard`) showing weekly closure heatmaps.
@@ -26,9 +28,9 @@ The models were retrained against a hardened simulation dataset incorporating 6 
 The canonical values are always the generated [evaluation artifact](artifacts/model_evaluation.json), rather than hand-maintained README numbers. It includes F1, precision/recall, ROC-AUC, PR-AUC, Brier score, calibration bins, event detection, and performance against hard-negative scenarios.
 
 ### Reopening Survival Classifier
-* **Mean Absolute Error (MAE)**: **1.73 minutes**
-* **Median Absolute Error**: **1.53 minutes**
-* **Calibration Error (180s)**: **0.0023** (very highly calibrated survival curve)
+* **Mean Absolute Error (MAE)**: **1.78 minutes** on the held-out synthetic test set
+* **Median Absolute Error**: **1.63 minutes** on the held-out synthetic test set
+* **Calibration Error (180s)**: **0.0009** on the held-out synthetic test set
 
 ## Run Locally
 

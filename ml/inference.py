@@ -35,7 +35,7 @@ class RailCrossPredictor:
             return t_next
         return float(horizons[-1])
 
-    def predict(self, observation: dict[str, float], crossing_prior: float | None = None) -> dict[str, Any]:
+    def predict(self, observation: dict[str, float]) -> dict[str, Any]:
         missing = [column for column in self.feature_columns if column not in observation]
         if missing:
             raise ValueError(f"Missing model features: {', '.join(missing)}")
@@ -43,18 +43,8 @@ class RailCrossPredictor:
         vector = np.asarray([[float(observation[column]) for column in self.feature_columns]])
         raw_probability = float(self.status_bundle["model"].predict_proba(vector)[0, 1])
         
-        # Apply optional Bayesian prior update
-        if crossing_prior is not None:
-            denom = raw_probability * crossing_prior + (1 - raw_probability) * (1 - crossing_prior)
-            if denom > 0:
-                adjusted_probability = (raw_probability * crossing_prior) / denom
-            else:
-                adjusted_probability = raw_probability
-        else:
-            adjusted_probability = raw_probability
-            
         threshold = float(self.status_bundle["threshold"])
-        is_closed = adjusted_probability >= threshold
+        is_closed = raw_probability >= threshold
         
         survival_curve = []
         median_minutes = 0.0
@@ -85,8 +75,7 @@ class RailCrossPredictor:
 
         return {
             "predicted_status": "CLOSED" if is_closed else "OPEN",
-            "closed_probability": round(adjusted_probability, 4),
-            "raw_closed_probability": round(raw_probability, 4),
+            "closed_probability": round(raw_probability, 4),
             "decision_threshold": round(threshold, 4),
             "predicted_minutes_until_open": median_minutes,
             "ci_80_low_minutes": ci_80_low_minutes,
@@ -100,10 +89,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("observation", type=Path, help="JSON object containing every model feature")
     parser.add_argument("--model-dir", type=Path, default=Path("models"))
-    parser.add_argument("--crossing-prior", type=float, default=None)
     args = parser.parse_args()
     observation = json.loads(args.observation.read_text(encoding="utf-8"))
-    print(json.dumps(RailCrossPredictor(args.model_dir).predict(observation, args.crossing_prior), indent=2))
+    print(json.dumps(RailCrossPredictor(args.model_dir).predict(observation), indent=2))
 
 
 if __name__ == "__main__":

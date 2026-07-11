@@ -15,7 +15,7 @@ All scores in `artifacts/model_evaluation.json` are therefore **synthetic held-o
 | Gate state | `gate_closed` | `HistGradientBoostingClassifier` | `OPEN` / `CLOSED` and probability |
 | Reopening time | `remaining_closed_seconds` | Discrete-time survival classifier across 30–600 s horizons | median and 80% interval |
 
-The classifier consumes traffic-derived features: duration delta, approach speed, stopped ratio, queue growth, congestion age, and rolling temporal signals. A train-schedule probability is fused at serving time as a separate Bayesian prior. Crowdsourced reports remain independent evidence rather than silently being presented as labelled training data.
+The classifier consumes traffic fields that can be requested from Google Routes: traffic-aware duration, static duration, traffic delay, traffic classes on both approaches, and persistence or change in delay calculated from repeated polls. It does not use phone counts, vehicle counts, stopped-vehicle ratios, schedules, or crowdsourced reports as model inputs.
 
 ## Evaluation design
 
@@ -34,4 +34,4 @@ python3 -m unittest tests.test_ml_pipeline
 
 ## Portfolio summary
 
-> RailCross is an ML systems prototype that combines event-driven synthetic simulation, gradient-boosted gate-state classification, discrete-time survival analysis for reopening estimates, schedule-prior fusion, and geofenced community evidence. It reports synthetic benchmark results transparently and defines a field-validation path before operational claims.
+> RailCross is an ML systems prototype that combines event-driven synthetic simulation, Google-Routes-observable traffic features, gradient-boosted gate-state classification, and reopening estimates. It reports synthetic benchmark results transparently and defines a field-validation path before operational claims.

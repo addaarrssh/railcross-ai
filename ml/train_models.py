@@ -201,8 +201,8 @@ def train(
 
     baseline_predictions = (
         (X[test_mask, FEATURE_COLUMNS.index("traffic_delay_seconds")] > 125)
-        & (X[test_mask, FEATURE_COLUMNS.index("queue_a_vehicles")] > 5)
-        & (X[test_mask, FEATURE_COLUMNS.index("queue_b_vehicles")] > 5)
+        & (X[test_mask, FEATURE_COLUMNS.index("both_approaches_jammed")] == 1)
+        & (X[test_mask, FEATURE_COLUMNS.index("both_approaches_jammed_minutes")] >= 1)
     ).astype(int)
     
     baseline_metrics = {
@@ -326,7 +326,7 @@ def train(
             "test_metrics": status_metrics,
             "calibration_bins": calibration_bins(y_status[test_mask], test_probabilities),
             "scenario_metrics": scenario_metrics(y_status[test_mask], test_probabilities, test_scenarios, threshold),
-            "ablation_note": "The trained classifier intentionally uses traffic-derived features only. Schedule priors and crowdsourced consensus are independent fusion inputs applied at serving time; they require a labelled real-world evaluation before a comparative ablation is claimed.",
+            "feature_scope": "The classifier uses only fields available from Google Routes traffic responses and time-history features computed from repeated polls. It does not use device counts, queue estimates, schedules, or crowdsourced reports.",
             "event_detection": detection_metrics,
             "top_permutation_features": permutation_importance[:8],
         },

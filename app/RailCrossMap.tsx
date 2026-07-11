@@ -27,17 +27,11 @@ type MapCrossing = {
     benchmark_scope: "synthetic" | "realtime";
   };
   traffic_snapshot: {
-    approach_a_speed_kph: number;
-    approach_b_speed_kph: number;
-    approach_a_movement: "MOVING" | "SLOW" | "STOPPED";
-    approach_b_movement: "MOVING" | "SLOW" | "STOPPED";
-    stopped_vehicle_ratio_a: number;
-    stopped_vehicle_ratio_b: number;
-    queue_a_vehicles: number;
-    queue_b_vehicles: number;
-    queue_growth_vehicles_per_minute: number;
+    approach_a_traffic: "NORMAL" | "SLOW" | "TRAFFIC_JAM";
+    approach_b_traffic: "NORMAL" | "SLOW" | "TRAFFIC_JAM";
     traffic_delay_seconds: number;
-    congestion_age_minutes: number;
+    traffic_delay_change_1min_seconds: number;
+    both_approaches_jammed_minutes: number;
   };
 };
 
@@ -221,14 +215,13 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
                 closed_probability: representativeCrossing.prediction.closed_probability,
                 predicted_minutes_until_open:
                   representativeCrossing.prediction.predicted_minutes_until_open,
-                approach_a_speed_kph: representativeCrossing.traffic_snapshot.approach_a_speed_kph,
-                approach_b_speed_kph: representativeCrossing.traffic_snapshot.approach_b_speed_kph,
-                approach_a_movement: representativeCrossing.traffic_snapshot.approach_a_movement,
-                approach_b_movement: representativeCrossing.traffic_snapshot.approach_b_movement,
-                queue_a_vehicles: representativeCrossing.traffic_snapshot.queue_a_vehicles,
-                queue_b_vehicles: representativeCrossing.traffic_snapshot.queue_b_vehicles,
-                queue_growth:
-                  representativeCrossing.traffic_snapshot.queue_growth_vehicles_per_minute,
+                approach_a_traffic: representativeCrossing.traffic_snapshot.approach_a_traffic,
+                approach_b_traffic: representativeCrossing.traffic_snapshot.approach_b_traffic,
+                traffic_delay_seconds: representativeCrossing.traffic_snapshot.traffic_delay_seconds,
+                traffic_delay_change_1min_seconds:
+                  representativeCrossing.traffic_snapshot.traffic_delay_change_1min_seconds,
+                both_approaches_jammed_minutes:
+                  representativeCrossing.traffic_snapshot.both_approaches_jammed_minutes,
               },
             };
           }),
@@ -285,9 +278,9 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
               ? "The map groups records within 45 m to avoid showing conflicting colours at one location."
               : `${Math.round(probability * 100)}% predicted probability of closure`;
           const traffic = document.createElement("p");
-          traffic.textContent = `Representative traffic snapshot: ${feature.getProperty("approach_a_movement")} at ${feature.getProperty("approach_a_speed_kph")} km/h · ${feature.getProperty("approach_b_movement")} at ${feature.getProperty("approach_b_speed_kph")} km/h`;
-          const queue = document.createElement("p");
-          queue.textContent = `Estimated queues: ${feature.getProperty("queue_a_vehicles")} + ${feature.getProperty("queue_b_vehicles")} vehicles · growth ${feature.getProperty("queue_growth")} vehicles/min`;
+          traffic.textContent = `Google Routes traffic classes: approach A ${feature.getProperty("approach_a_traffic")} · approach B ${feature.getProperty("approach_b_traffic")}`;
+          const trafficHistory = document.createElement("p");
+          trafficHistory.textContent = `Traffic delay: ${feature.getProperty("traffic_delay_seconds")} seconds · change in one minute: ${feature.getProperty("traffic_delay_change_1min_seconds")} seconds · both approaches jammed for ${feature.getProperty("both_approaches_jammed_minutes")} minutes`;
           
           const reopening = document.createElement("p");
           reopening.textContent =
@@ -316,7 +309,7 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
 
           const warning = document.createElement("small");
           warning.textContent = "Synthetic model demonstration — not live Google traffic or a verified gate state.";
-          popup.append(title, location, statusBadge, confidence, traffic, queue, reopening);
+          popup.append(title, location, statusBadge, confidence, traffic, trafficHistory, reopening);
           if (recordCount === 1) popup.append(reportSection);
           popup.append(warning);
           

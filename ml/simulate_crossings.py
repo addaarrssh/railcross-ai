@@ -1,9 +1,9 @@
-"""Generate Google-Routes-like railway-crossing traffic observations.
+"""Generate labelled traffic observations matching the Google Routes feature contract.
 
-The simulator mirrors the public shape of traffic-aware route data (static
-duration, traffic-aware duration, and NORMAL/SLOW/TRAFFIC_JAM segment states),
-then adds community and queue features that RailCross would own. It does not
-represent, reproduce, or claim access to Google's private traffic dataset.
+The simulator uses hidden traffic dynamics to generate labels, but exports only
+traffic-aware duration, static duration, speed classes, and time-history fields
+that a Routes API polling service can obtain or calculate. It does not claim
+access to Google's private device or vehicle data.
 """
 
 from __future__ import annotations
@@ -22,36 +22,16 @@ FEATURE_COLUMNS = [
     "route_static_duration_seconds",
     "route_duration_seconds",
     "traffic_delay_seconds",
-    "approach_a_speed_kph",
-    "approach_b_speed_kph",
     "approach_a_speed_code",
     "approach_b_speed_code",
-    "stopped_vehicle_ratio_a",
-    "stopped_vehicle_ratio_b",
-    "jam_segment_length_meters",
-    "queue_a_vehicles",
-    "queue_b_vehicles",
-    "queue_growth_vehicles_per_minute",
-    "congestion_age_minutes",
-    "speed_a_rolling_3min",
-    "speed_b_rolling_3min",
-    "queue_growth_rolling_3min",
-    "queue_growth_rolling_10min",
-    "queue_acceleration",
-    "speed_trend_5min",
+    "both_approaches_jammed",
+    "traffic_delay_change_1min_seconds",
+    "both_approaches_jammed_minutes",
+    "traffic_delay_rolling_3min_seconds",
+    "traffic_delay_rolling_10min_seconds",
 ]
 
-CONTEXT_COLUMNS = [
-    "hour_sin",
-    "hour_cos",
-    "day_of_week",
-    "is_weekend",
-    "community_closed_weight",
-    "community_open_weight",
-    "community_report_count",
-    "train_proximity_signal",
-    "historical_closure_probability",
-]
+CONTEXT_COLUMNS: list[str] = []
 
 METADATA_COLUMNS = [
     "event_id",
@@ -163,6 +143,8 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
         history_speed_b: list[float] = []
         history_queue_growth: list[float] = []
         history_combined_speed: list[float] = []
+        history_traffic_delay: list[float] = []
+        both_approaches_jammed_minutes = 0.0
 
         for step in range(config.steps_per_event):
             timestamp = event_start + timedelta(seconds=step * config.step_seconds)
@@ -261,6 +243,20 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
             else:
                 congestion_age = max(0.0, congestion_age - 1.0)
 
+            both_approaches_jammed = int(speed_code_a == 2 and speed_code_b == 2)
+            if both_approaches_jammed:
+                both_approaches_jammed_minutes += config.step_seconds / 60
+            else:
+                both_approaches_jammed_minutes = 0.0
+            history_traffic_delay.append(traffic_delay)
+            traffic_delay_change_1min = (
+                traffic_delay - history_traffic_delay[-3]
+                if len(history_traffic_delay) >= 3
+                else 0.0
+            )
+            traffic_delay_rolling_3min = float(np.mean(history_traffic_delay[-6:]))
+            traffic_delay_rolling_10min = float(np.mean(history_traffic_delay[-20:]))
+
             if scenario_kind == "railway_closure":
                 proximity = max(0.0, 1.0 - abs(step - scenario_start) / 8.0)
                 if step > scenario_start:
@@ -325,23 +321,13 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
                 "route_static_duration_seconds": static_duration,
                 "route_duration_seconds": route_duration,
                 "traffic_delay_seconds": traffic_delay,
-                "approach_a_speed_kph": observed_speed_a,
-                "approach_b_speed_kph": observed_speed_b,
                 "approach_a_speed_code": speed_code_a,
                 "approach_b_speed_code": speed_code_b,
-                "stopped_vehicle_ratio_a": stopped_ratio_a,
-                "stopped_vehicle_ratio_b": stopped_ratio_b,
-                "jam_segment_length_meters": jam_length,
-                "queue_a_vehicles": observed_queue_a,
-                "queue_b_vehicles": observed_queue_b,
-                "queue_growth_vehicles_per_minute": observed_queue_growth,
-                "congestion_age_minutes": congestion_age,
-                "speed_a_rolling_3min": speed_a_roll,
-                "speed_b_rolling_3min": speed_b_roll,
-                "queue_growth_rolling_3min": qg_roll_3m,
-                "queue_growth_rolling_10min": qg_roll_10m,
-                "queue_acceleration": q_accel,
-                "speed_trend_5min": speed_trend,
+                "both_approaches_jammed": both_approaches_jammed,
+                "traffic_delay_change_1min_seconds": traffic_delay_change_1min,
+                "both_approaches_jammed_minutes": both_approaches_jammed_minutes,
+                "traffic_delay_rolling_3min_seconds": traffic_delay_rolling_3min,
+                "traffic_delay_rolling_10min_seconds": traffic_delay_rolling_10min,
                 "community_closed_weight": closed_weight,
                 "community_open_weight": open_weight,
                 "community_report_count": report_count,
@@ -359,7 +345,7 @@ def write_dataset(path: Path, config: SimulationConfig) -> dict[str, int]:
     rows = generate_rows(config)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=ALL_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=ALL_COLUMNS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
     closed_rows = sum(int(row["gate_closed"]) for row in rows)

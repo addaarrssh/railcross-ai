@@ -24,9 +24,9 @@ export async function GET() {
 
     let metrics = actualMetrics;
     let featureDistributions = {
-      queue_growth: { mean: 0.15, std: 1.2 },
-      congestion_age: { mean: 2.4, std: 3.5 },
-      speeds: { mean: 22.4, std: 8.2 },
+      traffic_delay_seconds: { mean: 78, std: 34 },
+      both_approaches_jammed_minutes: { mean: 0.8, std: 1.1 },
+      traffic_delay_change_1min_seconds: { mean: 6.5, std: 18.2 },
     };
     let driftAlerts: Array<{ feature: string; pValue: number; status: string }> = [];
 
@@ -58,22 +58,24 @@ export async function GET() {
       });
 
       driftAlerts = [
-        { feature: "queue_growth_vehicles_per_minute", pValue: 0.012, status: "WARNING" },
-        { feature: "congestion_age_minutes", pValue: 0.084, status: "OK" },
+        { feature: "traffic_delay_seconds", pValue: 0.012, status: "WARNING" },
+        { feature: "both_approaches_jammed_minutes", pValue: 0.084, status: "OK" },
       ];
     } else {
       // Calculate real distributions from predictionsLog
       if (recentLogs.length > 0) {
-        let queueGrowthSum = 0;
-        let congestionAgeSum = 0;
+        let trafficDelaySum = 0;
+        let jamDurationSum = 0;
+        let delayChangeSum = 0;
         let count = 0;
         for (const log of recentLogs) {
           if (log.featuresJson) {
             try {
               const feat = JSON.parse(log.featuresJson);
-              if (feat.queue_growth_vehicles_per_minute !== undefined) {
-                queueGrowthSum += Number(feat.queue_growth_vehicles_per_minute);
-                congestionAgeSum += Number(feat.congestion_age_minutes || 0);
+              if (feat.traffic_delay_seconds !== undefined) {
+                trafficDelaySum += Number(feat.traffic_delay_seconds);
+                jamDurationSum += Number(feat.both_approaches_jammed_minutes || 0);
+                delayChangeSum += Number(feat.traffic_delay_change_1min_seconds || 0);
                 count++;
               }
             } catch {}
@@ -81,9 +83,9 @@ export async function GET() {
         }
         if (count > 0) {
           featureDistributions = {
-            queue_growth: { mean: Math.round((queueGrowthSum / count) * 100) / 100, std: 1.1 },
-            congestion_age: { mean: Math.round((congestionAgeSum / count) * 100) / 100, std: 2.8 },
-            speeds: { mean: 20.5, std: 7.4 },
+            traffic_delay_seconds: { mean: Math.round((trafficDelaySum / count) * 100) / 100, std: 34 },
+            both_approaches_jammed_minutes: { mean: Math.round((jamDurationSum / count) * 100) / 100, std: 1.1 },
+            traffic_delay_change_1min_seconds: { mean: Math.round((delayChangeSum / count) * 100) / 100, std: 18.2 },
           };
         }
       }

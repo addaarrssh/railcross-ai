@@ -1,7 +1,4 @@
-"""Create map-ready predictions for every pilot crossing using new models.
-
-Includes survival curves, Bayesian prior updates from schedules, and batched exports.
-"""
+"""Create map-ready synthetic predictions using Google-Routes-observable fields."""
 
 from __future__ import annotations
 
@@ -13,7 +10,6 @@ from pathlib import Path
 import numpy as np
 
 from ml.inference import RailCrossPredictor
-from ml.schedule_prior import get_schedule_prior
 from ml.simulate_crossings import FEATURE_COLUMNS, SimulationConfig, generate_rows
 
 
@@ -23,12 +19,8 @@ EVALUATION_PATH = ROOT / "artifacts" / "model_evaluation.json"
 OUTPUT_PATH = ROOT / "public" / "jharkhand_crossing_predictions.json"
 
 
-def movement_label(speed_kph: float, stopped_ratio: float) -> str:
-    if speed_kph < 5 or stopped_ratio >= 0.70:
-        return "STOPPED"
-    if speed_kph < 18 or stopped_ratio >= 0.35:
-        return "SLOW"
-    return "MOVING"
+def traffic_label(speed_code: float) -> str:
+    return ("NORMAL", "SLOW", "TRAFFIC_JAM")[int(speed_code)]
 
 
 def export(limit: int | None = None) -> Path:
@@ -52,15 +44,8 @@ def export(limit: int | None = None) -> Path:
         row = synthetic_rows[int(row_index)]
         features = {column: float(row[column]) for column in FEATURE_COLUMNS}
         
-        # Calculate schedule-based Bayesian prior
-        prior = get_schedule_prior(crossing["id"], now)
-        prediction = predictor.predict(features, crossing_prior=prior)
+        prediction = predictor.predict(features)
         
-        speed_a = features["approach_a_speed_kph"]
-        speed_b = features["approach_b_speed_kph"]
-        stopped_a = features["stopped_vehicle_ratio_a"]
-        stopped_b = features["stopped_vehicle_ratio_b"]
-
         markers.append(
             {
                 "id": crossing["id"],
@@ -71,17 +56,15 @@ def export(limit: int | None = None) -> Path:
                 "barrier": crossing["crossing_barrier"],
                 "prediction": prediction,
                 "traffic_snapshot": {
-                    "approach_a_speed_kph": round(speed_a, 1),
-                    "approach_b_speed_kph": round(speed_b, 1),
-                    "approach_a_movement": movement_label(speed_a, stopped_a),
-                    "approach_b_movement": movement_label(speed_b, stopped_b),
-                    "stopped_vehicle_ratio_a": round(stopped_a, 3),
-                    "stopped_vehicle_ratio_b": round(stopped_b, 3),
-                    "queue_a_vehicles": round(features["queue_a_vehicles"], 1),
-                    "queue_b_vehicles": round(features["queue_b_vehicles"], 1),
-                    "queue_growth_vehicles_per_minute": round(features["queue_growth_vehicles_per_minute"], 1),
+                    "approach_a_traffic": traffic_label(features["approach_a_speed_code"]),
+                    "approach_b_traffic": traffic_label(features["approach_b_speed_code"]),
                     "traffic_delay_seconds": round(features["traffic_delay_seconds"], 1),
-                    "congestion_age_minutes": round(features["congestion_age_minutes"], 1),
+                    "traffic_delay_change_1min_seconds": round(
+                        features["traffic_delay_change_1min_seconds"], 1
+                    ),
+                    "both_approaches_jammed_minutes": round(
+                        features["both_approaches_jammed_minutes"], 1
+                    ),
                     "survival_curve": prediction.get("survival_curve", []),
                 },
             }

@@ -15,12 +15,6 @@ type MapCrossing = {
     predicted_minutes_until_open: number;
     benchmark_scope: "synthetic" | "realtime";
   };
-  traffic_snapshot: {
-    approach_a_speed_kph: number;
-    approach_b_speed_kph: number;
-    queue_a_vehicles: number;
-    queue_b_vehicles: number;
-  };
 };
 
 type RouteOption = {

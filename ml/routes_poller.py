@@ -1,4 +1,9 @@
-"""Poll Google Routes API for real-time traffic features near level crossings."""
+"""Poll Google Routes traffic fields for two approaches to a level crossing.
+
+The output deliberately contains only API-observable route fields plus values
+calculated from previous polls. Google does not expose device counts, vehicle
+queues, stopped-vehicle ratios, or an authoritative gate state.
+"""
 
 from __future__ import annotations
 
@@ -7,207 +12,157 @@ import csv
 import json
 import time
 import urllib.request
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
 
-def compute_haversine_destination(lat: float, lng: float, bearing: float, distance_meters: float) -> tuple[float, float]:
-    # Simple flat-earth approximation for small distances
-    r_earth = 6378137.0
-    d_lat = (distance_meters * np.cos(np.radians(bearing))) / r_earth
-    d_lng = (distance_meters * np.sin(np.radians(bearing))) / (r_earth * np.cos(np.radians(lat)))
-    return lat + np.degrees(d_lat), lng + np.degrees(d_lng)
+FEATURE_COLUMNS = [
+    "route_static_duration_seconds",
+    "route_duration_seconds",
+    "traffic_delay_seconds",
+    "approach_a_speed_code",
+    "approach_b_speed_code",
+    "both_approaches_jammed",
+    "traffic_delay_change_1min_seconds",
+    "both_approaches_jammed_minutes",
+    "traffic_delay_rolling_3min_seconds",
+    "traffic_delay_rolling_10min_seconds",
+]
+
+SPEED_CODES = {"NORMAL": 0, "SLOW": 1, "TRAFFIC_JAM": 2}
 
 
-def poll_crossing_traffic(
-    crossing: dict, 
-    api_key: str
-) -> dict | None:
-    lat = float(crossing["latitude"])
-    lng = float(crossing["longitude"])
-    crossing_id = crossing["id"]
+def offset_point(latitude: float, longitude: float, bearing: float, distance_meters: float) -> tuple[float, float]:
+    earth_radius_meters = 6_378_137.0
+    latitude_offset = (distance_meters * np.cos(np.radians(bearing))) / earth_radius_meters
+    longitude_offset = (distance_meters * np.sin(np.radians(bearing))) / (
+        earth_radius_meters * np.cos(np.radians(latitude))
+    )
+    return latitude + np.degrees(latitude_offset), longitude + np.degrees(longitude_offset)
 
-    # Define route segment: 250m before and 250m after crossing (North-South route)
-    origin_lat, origin_lng = compute_haversine_destination(lat, lng, 0.0, 250.0)      # North
-    dest_lat, dest_lng = compute_haversine_destination(lat, lng, 180.0, 250.0)       # South
 
-    url = "https://routes.googleapis.com/directions/v2:computeRoutes"
-    headers = {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": api_key,
-        "X-Goog-Fieldmask": "routes.duration,routes.staticDuration,routes.travelAdvisory.speedReadingIntervals",
-    }
-    body = {
-        "origin": {
-            "location": {
-                "latLng": {
-                    "latitude": origin_lat,
-                    "longitude": origin_lng
-                }
-            }
-        },
-        "destination": {
-            "location": {
-                "latLng": {
-                    "latitude": dest_lat,
-                    "longitude": dest_lng
-                }
-            }
-        },
+def parse_seconds(value: str) -> float:
+    return float(value.removesuffix("s"))
+
+
+def fetch_approach_summary(
+    origin: tuple[float, float], destination: tuple[float, float], api_key: str
+) -> dict[str, float] | None:
+    request_body = {
+        "origin": {"location": {"latLng": {"latitude": origin[0], "longitude": origin[1]}}},
+        "destination": {"location": {"latLng": {"latitude": destination[0], "longitude": destination[1]}}},
         "travelMode": "DRIVE",
         "routingPreference": "TRAFFIC_AWARE",
+        "extraComputations": ["TRAFFIC_ON_POLYLINE"],
         "computeAlternativeRoutes": False,
     }
-
-    req = urllib.request.Request(
-        url, 
-        data=json.dumps(body).encode("utf-8"), 
-        headers=headers, 
-        method="POST"
+    request = urllib.request.Request(
+        "https://routes.googleapis.com/directions/v2:computeRoutes",
+        data=json.dumps(request_body).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": "routes.duration,routes.staticDuration,routes.travelAdvisory.speedReadingIntervals",
+        },
+        method="POST",
     )
-
     try:
-        with urllib.request.urlopen(req) as response:
-            res_data = json.loads(response.read().decode("utf-8"))
-            
-        if "routes" not in res_data or not res_data["routes"]:
-            return None
-            
-        route = res_data["routes"][0]
-        
-        # Duration format is a string ending with 's' (e.g. '125s')
-        def parse_seconds(val_str: str) -> float:
-            return float(val_str.rstrip("s"))
-            
-        duration = parse_seconds(route.get("duration", "0s"))
-        static_duration = parse_seconds(route.get("staticDuration", "0s"))
-        delay = max(0.0, duration - static_duration)
-        
-        # Extract approach speeds if speedReadingIntervals is available
-        # default to estimatives based on free flow if not present
-        free_flow_speed = 35.0  # default
-        speed_a = free_flow_speed
-        speed_b = free_flow_speed
-        
-        advisory = route.get("travelAdvisory", {})
-        intervals = advisory.get("speedReadingIntervals", [])
-        if intervals:
-            # Map interval speed codes to actual speeds
-            # Speed codes: 1=NORMAL, 2=SLOW, 3=JAM (represented as floats/integers)
-            speeds = []
-            for interval in intervals:
-                speed_code = interval.get("speed", "NORMAL")
-                if speed_code == "JAM":
-                    speeds.append(10.0)
-                elif speed_code == "SLOW":
-                    speeds.append(20.0)
-                else:
-                    speeds.append(35.0)
-            if len(speeds) >= 2:
-                speed_a = speeds[0]
-                speed_b = speeds[1]
-            elif len(speeds) == 1:
-                speed_a = speeds[0]
-                speed_b = speeds[0]
-
-        # In case intervals are empty, compute speed proportional to delay ratio
-        if not intervals and duration > 0:
-            ratio = static_duration / duration
-            speed_a = free_flow_speed * ratio
-            speed_b = free_flow_speed * ratio
-
-        # Heuristic estimates for queue counts andstopped ratios
-        queue_a = max(0.0, delay / 15.0)
-        queue_b = max(0.0, delay / 18.0)
-        queue_growth = max(-10.0, min(20.0, (queue_a + queue_b) / 5.0))
-        stopped_ratio_a = max(0.0, min(1.0, 1.0 - (speed_a / free_flow_speed)))
-        stopped_ratio_b = max(0.0, min(1.0, 1.0 - (speed_b / free_flow_speed)))
-        congestion_age = max(0.0, delay / 60.0)
-        
-        # Assemble feature dictionary matching the model schema
-        # We need all 20 features
-        obs = {
-            "crossing_id": crossing_id,
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "route_static_duration_seconds": static_duration,
-            "route_duration_seconds": duration,
-            "traffic_delay_seconds": delay,
-            "approach_a_speed_kph": speed_a,
-            "approach_b_speed_kph": speed_b,
-            "approach_a_speed_code": 2 if speed_a < 12 else 1 if speed_a < 25 else 0,
-            "approach_b_speed_code": 2 if speed_b < 12 else 1 if speed_b < 25 else 0,
-            "stopped_vehicle_ratio_a": stopped_ratio_a,
-            "stopped_vehicle_ratio_b": stopped_ratio_b,
-            "jam_segment_length_meters": (queue_a + queue_b) * 6.5,
-            "queue_a_vehicles": queue_a,
-            "queue_b_vehicles": queue_b,
-            "queue_growth_vehicles_per_minute": queue_growth,
-            "congestion_age_minutes": congestion_age,
-            # Rolling features fallback to current for single observations
-            "speed_a_rolling_3min": speed_a,
-            "speed_b_rolling_3min": speed_b,
-            "queue_growth_rolling_3min": queue_growth,
-            "queue_growth_rolling_10min": queue_growth,
-            "queue_acceleration": 0.0,
-            "speed_trend_5min": 0.0,
-        }
-        return obs
-    except Exception as e:
-        print(f"Error querying Routes API for crossing {crossing_id}: {e}")
+        with urllib.request.urlopen(request) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except Exception as error:
+        print(f"Routes request failed: {error}")
         return None
+
+    routes = payload.get("routes", [])
+    if not routes:
+        return None
+    route = routes[0]
+    intervals = route.get("travelAdvisory", {}).get("speedReadingIntervals", [])
+    worst_speed_code = max((SPEED_CODES.get(item.get("speed"), 0) for item in intervals), default=0)
+    duration = parse_seconds(route.get("duration", "0s"))
+    static_duration = parse_seconds(route.get("staticDuration", "0s"))
+    return {
+        "duration": duration,
+        "static_duration": static_duration,
+        "speed_code": float(worst_speed_code),
+    }
+
+
+def build_observation(
+    crossing: dict[str, Any], api_key: str, history: list[dict[str, float]]
+) -> dict[str, float | str] | None:
+    latitude = float(crossing["latitude"])
+    longitude = float(crossing["longitude"])
+    crossing_point = (latitude, longitude)
+    north_approach = offset_point(latitude, longitude, 0.0, 250.0)
+    south_approach = offset_point(latitude, longitude, 180.0, 250.0)
+
+    approach_a = fetch_approach_summary(north_approach, crossing_point, api_key)
+    approach_b = fetch_approach_summary(south_approach, crossing_point, api_key)
+    if not approach_a or not approach_b:
+        return None
+
+    static_duration = approach_a["static_duration"] + approach_b["static_duration"]
+    route_duration = approach_a["duration"] + approach_b["duration"]
+    traffic_delay = max(0.0, route_duration - static_duration)
+    both_jammed = int(approach_a["speed_code"] == 2 and approach_b["speed_code"] == 2)
+    prior_delay = history[-2]["traffic_delay_seconds"] if len(history) >= 2 else traffic_delay
+    prior_jam_duration = history[-1]["both_approaches_jammed_minutes"] if history else 0.0
+    jam_duration = prior_jam_duration + 0.5 if both_jammed else 0.0
+    delay_history = [item["traffic_delay_seconds"] for item in history] + [traffic_delay]
+
+    return {
+        "crossing_id": str(crossing["id"]),
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "route_static_duration_seconds": round(static_duration, 2),
+        "route_duration_seconds": round(route_duration, 2),
+        "traffic_delay_seconds": round(traffic_delay, 2),
+        "approach_a_speed_code": int(approach_a["speed_code"]),
+        "approach_b_speed_code": int(approach_b["speed_code"]),
+        "both_approaches_jammed": both_jammed,
+        "traffic_delay_change_1min_seconds": round(traffic_delay - prior_delay, 2),
+        "both_approaches_jammed_minutes": round(jam_duration, 2),
+        "traffic_delay_rolling_3min_seconds": round(float(np.mean(delay_history[-6:])), 2),
+        "traffic_delay_rolling_10min_seconds": round(float(np.mean(delay_history[-20:])), 2),
+    }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--crossings", type=Path, default=Path("data/crossings/jharkhand_pilot_level_crossings.json"))
-    parser.add_argument("--api-key", type=str, required=True, help="Google Maps API Key")
+    parser.add_argument("--api-key", required=True)
     parser.add_argument("--output", type=Path, default=Path("data/realtime/routes_observations.csv"))
-    parser.add_argument("--interval", type=int, default=300, help="Seconds to sleep between runs")
-    parser.add_argument("--max-crossings", type=int, default=10, help="Max crossings to poll in a single run")
+    parser.add_argument("--interval", type=int, default=30, help="Seconds between polls")
+    parser.add_argument("--max-crossings", type=int, default=5)
     args = parser.parse_args()
 
-    if not args.crossings.exists():
-        print(f"Crossings file not found: {args.crossings}")
-        return
-
-    crossing_payload = json.loads(args.crossings.read_text(encoding="utf-8"))
-    crossings = crossing_payload.get("crossings", [])[:args.max_crossings]
-
+    crossings = json.loads(args.crossings.read_text(encoding="utf-8")).get("crossings", [])[: args.max_crossings]
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    file_exists = args.output.exists()
+    history: dict[str, list[dict[str, float]]] = defaultdict(list)
+    write_header = not args.output.exists()
 
-    headers = [
-        "crossing_id", "timestamp_utc", "route_static_duration_seconds", "route_duration_seconds",
-        "traffic_delay_seconds", "approach_a_speed_kph", "approach_b_speed_kph",
-        "approach_a_speed_code", "approach_b_speed_code", "stopped_vehicle_ratio_a",
-        "stopped_vehicle_ratio_b", "jam_segment_length_meters", "queue_a_vehicles",
-        "queue_b_vehicles", "queue_growth_vehicles_per_minute", "congestion_age_minutes",
-        "speed_a_rolling_3min", "speed_b_rolling_3min", "queue_growth_rolling_3min",
-        "queue_growth_rolling_10min", "queue_acceleration", "speed_trend_5min"
-    ]
-
-    print(f"Starting real-time traffic poller for {len(crossings)} crossings...")
     while True:
-        observations = []
+        observations: list[dict[str, float | str]] = []
         for crossing in crossings:
-            obs = poll_crossing_traffic(crossing, args.api_key)
-            if obs:
-                observations.append(obs)
-                print(f"Successfully polled crossing {crossing['id']} - delay: {obs['traffic_delay_seconds']}s")
-            time.sleep(1.0) # Rate limit requests
-            
-        if observations:
-            with args.output.open("a", newline="", encoding="utf-8") as handle:
-                writer = csv.DictWriter(handle, fieldnames=headers)
-                if not file_exists:
-                    writer.writeheader()
-                    file_exists = True
-                writer.writerows(observations)
-            print(f"Wrote {len(observations)} observations to {args.output}")
+            crossing_history = history[str(crossing["id"])]
+            observation = build_observation(crossing, args.api_key, crossing_history)
+            if observation:
+                observations.append(observation)
+                crossing_history.append({column: float(observation[column]) for column in FEATURE_COLUMNS})
+                del crossing_history[:-20]
+            time.sleep(0.5)
 
-        print(f"Sleeping for {args.interval} seconds...")
+        if observations:
+            with args.output.open("a", newline="", encoding="utf-8") as output_file:
+                writer = csv.DictWriter(output_file, fieldnames=["crossing_id", "timestamp_utc", *FEATURE_COLUMNS])
+                if write_header:
+                    writer.writeheader()
+                    write_header = False
+                writer.writerows(observations)
         time.sleep(args.interval)
 
 

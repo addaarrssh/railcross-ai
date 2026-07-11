@@ -9,7 +9,7 @@ Validate the synthetic-trained RailCross model against independently observed cr
 1. Obtain permission from the rail operator, road authority, or CCTV owner before collection.
 2. Collect timestamped ground-truth gate state (`OPEN`, `CLOSED`, `UNKNOWN`) at 30-second resolution from authorised CCTV review or trained field observers.
 3. Store crossing identifier, observation timestamp, label source, reviewer ID, and an uncertainty flag. Do not retain faces, number plates, or raw video unless expressly authorised and covered by a retention policy.
-4. Separately retain traffic snapshots, schedule-prior values, and crowdsourced reports so that their contribution can be audited.
+4. Separately retain Routes API snapshots and crowdsourced reports so that their contribution can be audited.
 
 ## Evaluation split
 
