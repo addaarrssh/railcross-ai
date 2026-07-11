@@ -499,7 +499,7 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
             disabled={!crossingCount}
             onClick={toggleCrossings}
           >
-            {crossingsVisible ? "Hide" : "Show"} railway crossings{crossingCount ? ` (${crossingCount})` : ""}
+            {crossingsVisible ? "Hide" : "Show"} crossing predictions{crossingCount ? ` (${crossingCount})` : ""}
           </button>
           
           <button type="button" className="location-btn" onClick={centerOnMyLocation}>
@@ -511,6 +511,27 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
           </Link>
         </div>
       </section>
+
+      <aside className="project-summary" aria-label="About RailCross">
+        <p className="project-summary-kicker">RAILCROSS AI</p>
+        <h1>Plan around railway-crossing delays</h1>
+        <p>
+          A late gate closure can create a queue and make commuters miss a route or appointment.
+        </p>
+        <div className="project-summary-step">
+          <b>1. Watch traffic</b>
+          <span>Cars stopped for longer can signal that a gate is closed.</span>
+        </div>
+        <div className="project-summary-step">
+          <b>2. Predict the gate</b>
+          <span>The model shows a simple open or closed prediction for each crossing.</span>
+        </div>
+        <div className="project-summary-step">
+          <b>3. Update the journey</b>
+          <span>When cars move again, the prediction changes to open.</span>
+        </div>
+        <small>Demo data is synthetic, updates every minute, and repeats after 30 minutes.</small>
+      </aside>
 
       {/* Render Route Comparison overlay */}
       <RouteComparison

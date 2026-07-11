@@ -83,6 +83,67 @@ body {
   cursor: wait;
 }
 
+.project-summary {
+  position: fixed;
+  top: 96px;
+  right: 12px;
+  z-index: 10;
+  width: min(320px, calc(100% - 24px));
+  padding: 16px;
+  border: 1px solid #d7e2f0;
+  border-radius: 12px;
+  color: #1f2937;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 5px 18px rgb(60 64 67 / 22%);
+}
+
+.project-summary-kicker {
+  margin: 0 0 5px;
+  color: #1967d2;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.project-summary h1 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.project-summary > p:not(.project-summary-kicker) {
+  margin: 8px 0 13px;
+  color: #4b5563;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.project-summary-step {
+  display: grid;
+  gap: 2px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #edf1f5;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.project-summary-step b {
+  color: #1a73e8;
+}
+
+.project-summary-step span,
+.project-summary small {
+  color: #5f6368;
+}
+
+.project-summary small {
+  display: block;
+  margin-top: 13px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
 .prediction-legend {
   position: fixed;
   bottom: 28px;
@@ -208,6 +269,10 @@ body {
 
   .crossing-toggle {
     min-height: 42px;
+  }
+
+  .project-summary {
+    display: none;
   }
 }
 

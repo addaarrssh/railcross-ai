@@ -1,12 +1,25 @@
-# RailCross — ML Systems Prototype
+# RailCross — Railway Crossing Delay Assistant
 
-RailCross is a railway-crossing-aware navigation system that uses Google-Routes-observable traffic signals to estimate whether a level crossing may be closed, estimate reopening time, and compare commute routes.
+RailCross is an AI/ML prototype for a simple real-world commuter problem: an unexpected railway-gate closure can create a queue and make a route take longer. It uses traffic movement near a level crossing to estimate whether the gate is likely open or closed, then helps users consider the delay while planning a journey.
 
 ## Live Demo
 
 Visit the deployed application: [railcross-ai.adarshprivate678.workers.dev](https://railcross-ai.adarshprivate678.workers.dev)
 
-**Current evidence is synthetic only.** The model is trained and tested on a reproducible event-driven simulator, not real gate telemetry. See [ML project documentation](docs/ML_PROJECT.md) and the [field-validation protocol](docs/PILOT_VALIDATION_PROTOCOL.md) before making any operational or accuracy claim.
+## The Problem It Addresses
+
+Drivers and commuters often do not know that a level crossing is closed until they reach the queue. RailCross explores whether traffic behaviour can provide an early signal: cars stopped on both approaches for longer increase the chance of a closed gate; when traffic begins moving, the chance falls.
+
+## How the Prototype Works
+
+1. The app displays mapped railway-crossing locations.
+2. A traffic snapshot contains delay and stopped-time signals for each location.
+3. A Histogram Gradient Boosting classifier predicts `open` or `closed` from those signals.
+4. The map explains the prediction in plain language and can use it while comparing routes.
+
+The live site includes a **30-minute synthetic traffic demonstration**. It updates once per minute and repeats after 30 minutes, so users can see the prediction change from closed to open when simulated cars begin moving.
+
+**Current evidence is synthetic only.** The model is trained and tested on a reproducible event-driven simulator, not real gate telemetry. The web demo does not claim live gate status. See [ML project documentation](docs/ML_PROJECT.md) and the [field-validation protocol](docs/PILOT_VALIDATION_PROTOCOL.md) before making any operational or accuracy claim.
 
 The model schema is documented in [Google Routes data contract](docs/GOOGLE_ROUTES_DATA_CONTRACT.md). It mirrors only fields available through the Routes API or values calculated from repeated route polls.
 
