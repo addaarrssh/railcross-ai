@@ -14,10 +14,10 @@ Drivers and commuters often do not know that a level crossing is closed until th
 
 1. The app displays mapped railway-crossing locations.
 2. A traffic snapshot contains delay and stopped-time signals for each location.
-3. A Histogram Gradient Boosting classifier predicts `open` or `closed` from those signals.
+3. A Histogram Gradient Boosting classifier predicts `OPEN`, `CLOSED`, or — when the closure probability falls inside a validation-tuned uncertainty band or the observation is stale — `UNKNOWN` instead of guessing.
 4. The map explains the prediction in plain language and can use it while comparing routes.
 
-The live site includes a **30-minute synthetic traffic demonstration**. It updates once per minute and repeats after 30 minutes, so users can see the prediction change from closed to open when simulated cars begin moving.
+The live map has two modes. **Model snapshot** (default) shows the trained classifier's OPEN/CLOSED/UNKNOWN output for a synthetic traffic snapshot at each crossing. **Demo cycle** is a 30-minute animated traffic pattern that updates once per minute, so users can watch the prediction change from closed to open when simulated cars begin moving.
 
 **Current evidence is synthetic only.** The model is trained and tested on a reproducible event-driven simulator, not real gate telemetry. The web demo does not claim live gate status. See [ML project documentation](docs/ML_PROJECT.md) and the [field-validation protocol](docs/PILOT_VALIDATION_PROTOCOL.md) before making any operational or accuracy claim.
 
@@ -36,14 +36,13 @@ The model schema is documented in [Google Routes data contract](docs/GOOGLE_ROUT
 
 ## Reproducible Machine Learning Benchmark
 
-The models were retrained against a hardened simulation dataset incorporating 6 new hard negative scenario types (e.g. road accidents, school zones, construction jams) and 6 rolling temporal features:
+The simulator generates 14 distinct crossing profiles (busy urban to quiet rural) with railway closures plus 7 hard-negative congestion scenarios (road accidents, market days, school zones, construction, signal failures, flooding, ordinary jams) and rolling temporal features.
 
-The canonical values are always the generated [evaluation artifact](artifacts/model_evaluation.json), rather than hand-maintained README numbers. It includes F1, precision/recall, ROC-AUC, PR-AUC, Brier score, calibration bins, event detection, and performance against hard-negative scenarios.
+**Evaluation design.** Three full crossings are held out of training entirely and used as an **unseen-crossing test set** — the headline generalization check. The remaining 11 crossings are split chronologically by closure event (70% train / 15% validation / 15% seen-crossing test) so no event straddles train and test. The decision threshold and the UNKNOWN uncertainty band are tuned only on validation data.
 
-### Reopening Survival Classifier
-* **Mean Absolute Error (MAE)**: **1.78 minutes** on the held-out synthetic test set
-* **Median Absolute Error**: **1.63 minutes** on the held-out synthetic test set
-* **Calibration Error (180s)**: **0.0009** on the held-out synthetic test set
+**Uncertainty-aware output.** When the closure probability falls inside the tuned band, the model answers `UNKNOWN` (abstains) rather than guessing; stale observations also return `UNKNOWN`. Abstention on ~15–17% of rows raises decided-row accuracy to ~90% on both test sets.
+
+The canonical values are always the generated [evaluation artifact](artifacts/model_evaluation.json), rather than hand-maintained README numbers. It includes seen- and unseen-crossing F1, precision/recall, ROC-AUC, PR-AUC, Brier score, calibration bins, abstention coverage/accuracy, event-level detection delay and missed-closure rate, reopening-time MAE, and per-scenario hard-negative behavior. The [evaluation notebook](notebooks/railcross_model_evaluation.ipynb) presents the same numbers with charts.
 
 ## Run Locally
 

@@ -12,14 +12,20 @@ All scores in `artifacts/model_evaluation.json` are therefore **synthetic held-o
 
 | Task | Target | Model | User-facing output |
 | --- | --- | --- | --- |
-| Gate state | `gate_closed` | `HistGradientBoostingClassifier` | `OPEN` / `CLOSED` and probability |
+| Gate state | `gate_closed` | `HistGradientBoostingClassifier` | `OPEN` / `CLOSED` / `UNKNOWN` and probability |
 | Reopening time | `remaining_closed_seconds` | Discrete-time survival classifier across 30–600 s horizons | median and 80% interval |
+
+`UNKNOWN` is a deliberate abstention: probabilities inside a validation-tuned uncertainty band, or observations older than 180 seconds, return `UNKNOWN` instead of a low-confidence guess. The band is chosen to abstain on at most 15% of validation rows while maximising decided-row F1 with a false-positive penalty.
 
 The classifier consumes traffic fields that can be requested from Google Routes: traffic-aware duration, static duration, traffic delay, traffic classes on both approaches, and persistence or change in delay calculated from repeated polls. It does not use phone counts, vehicle counts, stopped-vehicle ratios, schedules, or crowdsourced reports as model inputs.
 
 ## Evaluation design
 
-Events—not individual rows—are split chronologically: 70% train, 15% validation, and 15% test. This prevents rows from the same simulated closure event appearing in both training and test sets. Threshold selection happens only on validation data. The generated report includes F1, precision, recall, ROC-AUC, PR-AUC, Brier score, reliability-bin data, event detection delay, reopening-time MAE, and per-scenario hard-negative behavior.
+The simulator produces 14 crossing profiles. Three complete crossings (`RNC-TTS-03`, `JAM-KND-08`, `LTH-MHU-13`) are excluded from training and validation and scored only as an **unseen-crossing test set**, measuring generalization to locations the model has never observed. The remaining 11 crossings are split by event—not individual rows—chronologically: 70% train, 15% validation, and 15% seen-crossing test. This prevents rows from the same simulated closure event appearing in both training and test sets.
+
+Threshold selection and the UNKNOWN abstention band are tuned only on validation data. The generated report includes, for both test sets: F1, precision, recall, ROC-AUC, PR-AUC, Brier score, reliability-bin data, abstention coverage and decided-row metrics, event detection delay and missed-closure rate, reopening-time MAE, and per-scenario hard-negative behavior.
+
+The classifier is trained without class re-weighting: upweighting the rare closed class inflates predicted probabilities and breaks calibration, so imbalance is handled at the decision layer (threshold + abstention band) where it belongs.
 
 ## Reproduce
 
@@ -34,4 +40,4 @@ python3 -m unittest tests.test_ml_pipeline
 
 ## Portfolio summary
 
-> RailCross is an ML systems prototype that combines event-driven synthetic simulation, Google-Routes-observable traffic features, gradient-boosted gate-state classification, and reopening estimates. It reports synthetic benchmark results transparently and defines a field-validation path before operational claims.
+> RailCross is an ML systems prototype that combines event-driven synthetic simulation over 14 crossing profiles, Google-Routes-observable traffic features, gradient-boosted gate-state classification with calibrated probabilities and an UNKNOWN abstention band, discrete-time survival estimates of reopening time, and an unseen-crossing holdout evaluation. It reports synthetic benchmark results transparently and defines a field-validation path before operational claims.

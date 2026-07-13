@@ -72,9 +72,9 @@ def export(limit: int | None = None) -> Path:
 
     status_counts = {
         status: sum(marker["prediction"]["predicted_status"] == status for marker in markers)
-        for status in ("OPEN", "CLOSED")
+        for status in ("OPEN", "CLOSED", "UNKNOWN")
     }
-    
+
     output = {
         "mode": "traffic_first_synthetic_model_demo",
         "generated_at_utc": now.replace(microsecond=0).isoformat(),
@@ -82,6 +82,8 @@ def export(limit: int | None = None) -> Path:
         "model": {
             "features": FEATURE_COLUMNS,
             "test_metrics": evaluation["classifier"]["test_metrics"],
+            "unseen_crossing_test_metrics": evaluation["classifier"]["unseen_crossing_test_metrics"],
+            "abstention": evaluation["classifier"]["abstention"],
             "event_detection": evaluation["classifier"]["event_detection"],
             "reopening_metrics": evaluation["reopening_regressor"]["test_metrics"],
         },

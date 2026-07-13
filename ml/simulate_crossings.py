@@ -47,11 +47,33 @@ ALL_COLUMNS = METADATA_COLUMNS + FEATURE_COLUMNS + CONTEXT_COLUMNS + TARGET_COLU
 
 @dataclass(frozen=True)
 class SimulationConfig:
-    events: int = 650
+    events: int = 980
     steps_per_event: int = 46
     step_seconds: int = 30
     closure_probability: float = 0.50
     seed: int = 42
+
+
+# Each profile: (crossing_id, historical_closure_probability, free_flow_kph,
+# base_route_duration_seconds, traffic_volume_multiplier). The 14 profiles span
+# busy urban gates (high volume, low free-flow speed) to quiet rural ones so a
+# crossing-holdout split can measure generalization to unseen crossings.
+CROSSING_PROFILES: list[tuple[str, float, float, float, float]] = [
+    ("RNC-KTA-01", 0.68, 33.0, 150.0, 1.15),
+    ("RNC-NMK-02", 0.55, 40.0, 172.0, 0.95),
+    ("RNC-TTS-03", 0.62, 30.0, 140.0, 1.25),
+    ("RNC-PSK-04", 0.49, 44.0, 188.0, 0.80),
+    ("RNC-BRM-05", 0.71, 28.0, 132.0, 1.30),
+    ("JAM-ADX-06", 0.72, 35.0, 155.0, 1.20),
+    ("JAM-GAM-07", 0.61, 31.0, 142.0, 1.05),
+    ("JAM-KND-08", 0.56, 38.0, 168.0, 0.90),
+    ("JAM-TEL-09", 0.66, 26.0, 125.0, 1.35),
+    ("JAM-SKC-10", 0.52, 42.0, 180.0, 0.85),
+    ("LTH-BRW-11", 0.44, 47.0, 196.0, 0.70),
+    ("LTH-CHD-12", 0.58, 36.0, 160.0, 0.88),
+    ("LTH-MHU-13", 0.47, 45.0, 205.0, 0.65),
+    ("LTH-LAT-14", 0.63, 32.0, 148.0, 1.00),
+]
 
 
 def _speed_code(speed_kph: float, free_flow_kph: float) -> int:
@@ -74,19 +96,18 @@ def generate_rows(config: SimulationConfig) -> list[dict[str, object]]:
     rng = np.random.default_rng(config.seed)
     rows: list[dict[str, object]] = []
     base_time = datetime(2026, 1, 1, 5, 30, tzinfo=timezone.utc)
-    crossing_profiles = [
-        ("JAM-ADX-01", 0.72, 35.0, 155.0),
-        ("JAM-GAM-02", 0.61, 31.0, 142.0),
-        ("JAM-KND-03", 0.56, 38.0, 168.0),
-    ]
 
     for event_id in range(config.events):
-        crossing_id, historical_probability, free_flow_kph, base_duration = crossing_profiles[event_id % len(crossing_profiles)]
+        crossing_id, historical_probability, free_flow_kph, base_duration, crossing_volume = CROSSING_PROFILES[
+            event_id % len(CROSSING_PROFILES)
+        ]
         event_start = base_time + timedelta(minutes=37 * event_id)
         hour = event_start.hour + event_start.minute / 60
-        volume_multiplier = _rush_multiplier(hour)
-        
-        has_closure = bool(rng.random() < config.closure_probability)
+        volume_multiplier = _rush_multiplier(hour) * crossing_volume
+
+        # Busier corridors see proportionally more gate closures.
+        event_closure_probability = config.closure_probability * (0.70 + 0.60 * historical_probability)
+        has_closure = bool(rng.random() < event_closure_probability)
         
         # Scenario distribution
         if has_closure:

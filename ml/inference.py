@@ -10,6 +10,31 @@ from typing import Any
 import joblib
 import numpy as np
 
+# Observations older than this cannot support a confident OPEN/CLOSED answer.
+MAX_OBSERVATION_AGE_SECONDS = 180.0
+
+
+def decide_status(
+    closed_probability: float,
+    threshold: float,
+    unknown_band: tuple[float, float] | None,
+    observation_age_seconds: float | None = None,
+) -> tuple[str, str]:
+    """Map a closure probability to (status, reason).
+
+    Stale observations and probabilities inside the unknown band abstain with
+    UNKNOWN instead of guessing.
+    """
+    if observation_age_seconds is not None and observation_age_seconds > MAX_OBSERVATION_AGE_SECONDS:
+        return "UNKNOWN", "stale_observation"
+    if unknown_band is not None:
+        open_bound, closed_bound = unknown_band
+        if open_bound <= closed_probability < closed_bound:
+            return "UNKNOWN", "low_confidence_probability"
+    if closed_probability >= threshold:
+        return "CLOSED", "confident_closed"
+    return "OPEN", "confident_open"
+
 
 class RailCrossPredictor:
     def __init__(self, model_dir: Path = Path("models")) -> None:
@@ -35,22 +60,28 @@ class RailCrossPredictor:
             return t_next
         return float(horizons[-1])
 
-    def predict(self, observation: dict[str, float]) -> dict[str, Any]:
+    def predict(
+        self, observation: dict[str, float], observation_age_seconds: float | None = None
+    ) -> dict[str, Any]:
         missing = [column for column in self.feature_columns if column not in observation]
         if missing:
             raise ValueError(f"Missing model features: {', '.join(missing)}")
-            
+
         vector = np.asarray([[float(observation[column]) for column in self.feature_columns]])
         raw_probability = float(self.status_bundle["model"].predict_proba(vector)[0, 1])
-        
+
         threshold = float(self.status_bundle["threshold"])
-        is_closed = raw_probability >= threshold
-        
+        band = self.status_bundle.get("unknown_band")
+        status, status_reason = decide_status(
+            raw_probability, threshold, tuple(band) if band else None, observation_age_seconds
+        )
+        is_closed = status == "CLOSED"
+
         survival_curve = []
         median_minutes = 0.0
         ci_80_low_minutes = 0.0
         ci_80_high_minutes = 0.0
-        
+
         if is_closed:
             horizons = self.reopening_bundle["horizons"]
             model = self.reopening_bundle["model"]
@@ -74,9 +105,11 @@ class RailCrossPredictor:
             ci_80_high_minutes = round(ci_80_high_seconds / 60, 2)
 
         return {
-            "predicted_status": "CLOSED" if is_closed else "OPEN",
+            "predicted_status": status,
+            "status_reason": status_reason,
             "closed_probability": round(raw_probability, 4),
             "decision_threshold": round(threshold, 4),
+            "unknown_band": [round(float(b), 4) for b in band] if band else None,
             "predicted_minutes_until_open": median_minutes,
             "ci_80_low_minutes": ci_80_low_minutes,
             "ci_80_high_minutes": ci_80_high_minutes,

@@ -187,6 +187,10 @@ body {
   background: #f9ab00;
 }
 
+.legend-unknown {
+  background: #f9ab00;
+}
+
 .prediction-legend small {
   color: #777;
   font-size: 10px;
@@ -226,6 +230,11 @@ body {
 .prediction-closed {
   color: #a50e0e;
   background: #fce8e6;
+}
+
+.prediction-unknown {
+  color: #7a4e00;
+  background: #fef7e0;
 }
 
 .prediction-mixed {
@@ -820,6 +829,7 @@ body {
 }
 .dot-open { background: #22c55e; }
 .dot-closed { background: #ef4444; }
+.dot-unknown { background: #f9ab00; }
 
 .recommendations-container {
   display: grid;

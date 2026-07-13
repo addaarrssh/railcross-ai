@@ -10,7 +10,8 @@ type MapCrossing = {
   lng: number;
   barrier: string | null;
   prediction: {
-    predicted_status: "OPEN" | "CLOSED";
+    predicted_status: "OPEN" | "CLOSED" | "UNKNOWN";
+    status_reason?: string;
     closed_probability: number;
     predicted_minutes_until_open: number;
     benchmark_scope: "synthetic" | "realtime";
@@ -164,7 +165,8 @@ export default function RouteComparison({ map, crossings, origin, destination }:
         if (c.prediction.predicted_status === "CLOSED") {
           hasClosedCrossing = true;
           totalDelaySeconds += c.prediction.predicted_minutes_until_open * 60;
-        } else if (c.prediction.closed_probability > 0.4) {
+        } else if (c.prediction.predicted_status === "UNKNOWN" || c.prediction.closed_probability > 0.4) {
+          // An abstaining model is a caution signal, not an all-clear.
           hasWarningCrossing = true;
           totalDelaySeconds += 120; // assumed caution delay
         }

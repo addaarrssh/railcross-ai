@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from ml.inference import RailCrossPredictor
@@ -36,8 +37,14 @@ def run_inference(
         features = {}
         for col in FEATURE_COLUMNS:
             features[col] = float(obs[col])
-            
-        prediction = predictor.predict(features)
+
+        # Stale observations must return UNKNOWN, never a stale OPEN/CLOSED guess.
+        observed_at = datetime.fromisoformat(obs["timestamp_utc"])
+        if observed_at.tzinfo is None:
+            observed_at = observed_at.replace(tzinfo=timezone.utc)
+        age_seconds = (datetime.now(timezone.utc) - observed_at).total_seconds()
+
+        prediction = predictor.predict(features, observation_age_seconds=age_seconds)
         
         # Override benchmark scope and source tags
         prediction["benchmark_scope"] = "realtime"

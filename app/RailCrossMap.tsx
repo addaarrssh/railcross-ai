@@ -21,7 +21,8 @@ type MapCrossing = {
   lng: number;
   barrier: string | null;
   prediction: {
-    predicted_status: "OPEN" | "CLOSED";
+    predicted_status: "OPEN" | "CLOSED" | "UNKNOWN";
+    status_reason?: string;
     closed_probability: number;
     predicted_minutes_until_open: number;
     benchmark_scope: "synthetic" | "realtime";
@@ -55,6 +56,11 @@ type TrafficDemoSnapshot = {
   closedProbability: number;
   cyclePosition: number;
 };
+
+// "model": markers show the trained Python classifier's OPEN/CLOSED/UNKNOWN
+// output for each crossing's synthetic traffic snapshot (from the exported
+// predictions file). "demo": an animated 30-minute traffic cycle for demos.
+type PredictionMode = "model" | "demo";
 
 const DEMO_CYCLE_MINUTES = 30;
 
@@ -175,6 +181,9 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
   const [markerGroupCount, setMarkerGroupCount] = useState(0);
   const [crossingsVisible, setCrossingsVisible] = useState(false);
   const [cycleMinute, setCycleMinute] = useState(() => getCycleMinute());
+  const [predictionMode, setPredictionMode] = useState<PredictionMode>("model");
+  const predictionModeRef = useRef<PredictionMode>("model");
+  const applyPredictionModeRef = useRef<((mode: PredictionMode) => void) | null>(null);
   
   const [origin, setOrigin] = useState<google.maps.LatLng | null>(null);
   const [destination, setDestination] = useState<google.maps.LatLng | null>(null);
@@ -237,23 +246,31 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
 
         const crossingLayer = new google.maps.Data();
         const crossingBounds = new google.maps.LatLngBounds();
-        const updateTrafficDemo = (minute: number) => {
+        const applyPredictionState = (mode: PredictionMode, minute: number) => {
           crossingLayer.forEach((feature) => {
-            const snapshot = createTrafficDemoSnapshot(String(feature.getProperty("group_id")), minute);
-            feature.setProperty("predicted_status", snapshot.status);
-            feature.setProperty("stopped_minutes", snapshot.stoppedMinutes);
-            feature.setProperty("traffic_delay_seconds", snapshot.trafficDelaySeconds);
-            feature.setProperty("closed_probability", snapshot.closedProbability);
-            feature.setProperty("cycle_position", snapshot.cyclePosition);
+            if (mode === "demo") {
+              const snapshot = createTrafficDemoSnapshot(String(feature.getProperty("group_id")), minute);
+              feature.setProperty("predicted_status", snapshot.status);
+              feature.setProperty("stopped_minutes", snapshot.stoppedMinutes);
+              feature.setProperty("traffic_delay_seconds", snapshot.trafficDelaySeconds);
+              feature.setProperty("closed_probability", snapshot.closedProbability);
+              feature.setProperty("cycle_position", snapshot.cyclePosition);
+            } else {
+              feature.setProperty("predicted_status", feature.getProperty("model_status"));
+              feature.setProperty("stopped_minutes", 0);
+              feature.setProperty("traffic_delay_seconds", feature.getProperty("model_traffic_delay_seconds"));
+              feature.setProperty("closed_probability", feature.getProperty("model_probability"));
+              feature.setProperty("cycle_position", 0);
+            }
           });
           setCycleMinute(minute);
         };
+        applyPredictionModeRef.current = (mode) => applyPredictionState(mode, getCycleMinute());
 
         crossingLayer.addGeoJson({
           type: "FeatureCollection",
           features: markerGroups.map((group) => {
             const [representativeCrossing] = group.crossings;
-            const snapshot = createTrafficDemoSnapshot(group.id, getCycleMinute());
             crossingBounds.extend({ lat: group.lat, lng: group.lng });
             return {
               type: "Feature",
@@ -266,20 +283,26 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
                 id: representativeCrossing.id,
                 district: group.district,
                 record_count: group.crossings.length,
-                predicted_status: snapshot.status,
-                stopped_minutes: snapshot.stoppedMinutes,
-                traffic_delay_seconds: snapshot.trafficDelaySeconds,
-                closed_probability: snapshot.closedProbability,
-                cycle_position: snapshot.cyclePosition,
+                // Trained-model output for this crossing's exported snapshot.
+                model_status: representativeCrossing.prediction.predicted_status,
+                model_probability: representativeCrossing.prediction.closed_probability,
+                model_minutes_until_open: representativeCrossing.prediction.predicted_minutes_until_open,
+                model_traffic_delay_seconds: representativeCrossing.traffic_snapshot.traffic_delay_seconds,
+                // Display properties, filled in by applyPredictionState below.
+                predicted_status: representativeCrossing.prediction.predicted_status,
+                stopped_minutes: 0,
+                traffic_delay_seconds: representativeCrossing.traffic_snapshot.traffic_delay_seconds,
+                closed_probability: representativeCrossing.prediction.closed_probability,
+                cycle_position: 0,
               },
             };
           }),
         });
-        
+
         crossingLayer.setStyle((feature) => {
           const status = feature.getProperty("predicted_status");
           const fillColor =
-            status === "CLOSED" ? "#d93025" : "#188038";
+            status === "CLOSED" ? "#d93025" : status === "UNKNOWN" ? "#f9ab00" : "#188038";
           return {
             icon: {
               path: google.maps.SymbolPath.CIRCLE,
@@ -301,35 +324,56 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
           const stoppedMinutes = Number(feature.getProperty("stopped_minutes"));
           const trafficDelaySeconds = Math.round(Number(feature.getProperty("traffic_delay_seconds")));
 
+          const mode = predictionModeRef.current;
+          const closedProbability = Number(feature.getProperty("closed_probability"));
+          const minutesUntilOpen = Number(feature.getProperty("model_minutes_until_open"));
+          const probabilityPercent = Math.round(closedProbability * 100);
+
           const popup = document.createElement("article");
           popup.className = "prediction-popup";
           const title = document.createElement("h2");
-          title.textContent =
-            recordCount > 1
-              ? "Railway crossing"
-              : "Railway crossing";
+          title.textContent = "Railway crossing";
           const location = document.createElement("p");
           location.textContent = String(feature.getProperty("district"));
           const statusBadge = document.createElement("strong");
           statusBadge.className =
-            status === "CLOSED" ? "prediction-closed" : "prediction-open";
+            status === "CLOSED"
+              ? "prediction-closed"
+              : status === "UNKNOWN"
+                ? "prediction-unknown"
+                : "prediction-open";
           statusBadge.textContent =
-            status === "CLOSED" ? "Gate closed (prediction)" : "Gate open (prediction)";
+            status === "CLOSED"
+              ? "Gate closed (prediction)"
+              : status === "UNKNOWN"
+                ? "Status unknown (model abstained)"
+                : "Gate open (prediction)";
           const reason = document.createElement("p");
-          reason.textContent =
-            status === "CLOSED"
-              ? `Cars have been stopped here for ${stoppedMinutes} minute${stoppedMinutes === 1 ? "" : "s"}. The model predicts that the gate is closed.`
-              : "Cars are moving through this area. The model predicts that the gate is open.";
+          if (mode === "model") {
+            reason.textContent =
+              status === "CLOSED"
+                ? `The trained classifier gives a ${probabilityPercent}% closure probability${minutesUntilOpen > 0 ? ` and expects the gate to reopen in about ${minutesUntilOpen} minutes` : ""}.`
+                : status === "UNKNOWN"
+                  ? `The closure probability (${probabilityPercent}%) falls inside the model's uncertainty band, so it reports UNKNOWN instead of guessing.`
+                  : `The trained classifier gives only a ${probabilityPercent}% closure probability, so the gate is predicted open.`;
+          } else {
+            reason.textContent =
+              status === "CLOSED"
+                ? `Cars have been stopped here for ${stoppedMinutes} minute${stoppedMinutes === 1 ? "" : "s"}. The model predicts that the gate is closed.`
+                : "Cars are moving through this area. The model predicts that the gate is open.";
+          }
           const traffic = document.createElement("p");
-          traffic.textContent =
-            status === "CLOSED"
-              ? `Current traffic delay: about ${trafficDelaySeconds} seconds.`
-              : `Traffic is moving. Current delay: about ${trafficDelaySeconds} seconds.`;
+          traffic.textContent = `Traffic delay in this snapshot: about ${trafficDelaySeconds} seconds.`;
           const nextChange = document.createElement("p");
-          nextChange.textContent =
-            status === "CLOSED"
-              ? "When the cars start moving in the next demo update, this prediction changes to gate open."
-              : "If cars stay stopped for more than one minute, the next demo update can change this to gate closed.";
+          if (mode === "demo") {
+            nextChange.textContent =
+              status === "CLOSED"
+                ? "When the cars start moving in the next demo update, this prediction changes to gate open."
+                : "If cars stay stopped for more than one minute, the next demo update can change this to gate closed.";
+          } else {
+            nextChange.textContent =
+              "Switch to the demo cycle to watch how predictions change as simulated traffic builds and clears.";
+          }
           const groupNote = document.createElement("p");
           groupNote.textContent =
             recordCount > 1 ? `This one dot represents ${recordCount} map records at the same crossing area.` : "";
@@ -352,7 +396,10 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
           }
 
           const warning = document.createElement("small");
-          warning.textContent = "Synthetic traffic demo: it updates every minute and repeats after 30 minutes. It is not a live or verified gate status.";
+          warning.textContent =
+            mode === "model"
+              ? "Model snapshot: the trained classifier scored a synthetic traffic snapshot for this crossing. It is not a live or verified gate status."
+              : "Synthetic traffic demo: it updates every minute and repeats after 30 minutes. It is not a live or verified gate status.";
           popup.append(title, location, statusBadge, reason, traffic, nextChange);
           if (recordCount > 1) popup.append(groupNote);
           if (recordCount === 1) popup.append(reportSection);
@@ -366,14 +413,16 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         crossingLayerRef.current = crossingLayer;
         crossingBoundsRef.current = crossingBounds;
         setCrossingCount(crossingPayload.total);
-        updateTrafficDemo(getCycleMinute());
+        applyPredictionState(predictionModeRef.current, getCycleMinute());
 
         let previousMinute = getCycleMinute();
         trafficTimer = window.setInterval(() => {
           const nextMinute = getCycleMinute();
           if (nextMinute !== previousMinute) {
             previousMinute = nextMinute;
-            updateTrafficDemo(nextMinute);
+            if (predictionModeRef.current === "demo") {
+              applyPredictionState("demo", nextMinute);
+            }
           }
         }, 1_000);
 
@@ -461,6 +510,13 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
     }
   };
 
+  function togglePredictionMode() {
+    const nextMode: PredictionMode = predictionModeRef.current === "model" ? "demo" : "model";
+    predictionModeRef.current = nextMode;
+    setPredictionMode(nextMode);
+    applyPredictionModeRef.current?.(nextMode);
+  }
+
   function toggleCrossings() {
     const map = mapInstanceRef.current;
     const layer = crossingLayerRef.current;
@@ -502,6 +558,17 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
             {crossingsVisible ? "Hide" : "Show"} crossing predictions{crossingCount ? ` (${crossingCount})` : ""}
           </button>
           
+          <button
+            type="button"
+            className="crossing-toggle"
+            aria-pressed={predictionMode === "demo"}
+            disabled={!crossingCount}
+            onClick={togglePredictionMode}
+            title="Model snapshot shows the trained classifier's OPEN/CLOSED/UNKNOWN output; demo cycle animates a synthetic 30-minute traffic pattern."
+          >
+            {predictionMode === "model" ? "🧠 Model snapshot" : "🔁 Demo cycle"}
+          </button>
+
           <button type="button" className="location-btn" onClick={centerOnMyLocation}>
             📍 Locate Me
           </button>
@@ -524,13 +591,17 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         </div>
         <div className="project-summary-step">
           <b>2. Predict the gate</b>
-          <span>The model shows a simple open or closed prediction for each crossing.</span>
+          <span>The model predicts open, closed, or unknown when it is not confident enough.</span>
         </div>
         <div className="project-summary-step">
           <b>3. Update the journey</b>
           <span>When cars move again, the prediction changes to open.</span>
         </div>
-        <small>Demo data is synthetic, updates every minute, and repeats after 30 minutes.</small>
+        <small>
+          {predictionMode === "model"
+            ? "Model snapshot mode: the trained classifier scored a synthetic traffic snapshot per crossing."
+            : "Demo cycle mode: synthetic traffic that updates every minute and repeats after 30 minutes."}
+        </small>
       </aside>
 
       {/* Render Route Comparison overlay */}
@@ -548,8 +619,11 @@ export default function RailCrossMap({ apiKey }: { apiKey: string }) {
         <aside className="prediction-legend" aria-label="Model prediction legend">
           <span><i className="legend-open" /> Gate open (prediction)</span>
           <span><i className="legend-closed" /> Gate closed (prediction)</span>
+          <span><i className="legend-unknown" /> Status unknown (model abstained)</span>
           <small>
-            Synthetic 30-minute traffic demo · minute {cycleMinute + 1} of {DEMO_CYCLE_MINUTES}
+            {predictionMode === "model"
+              ? "Trained-model snapshot on synthetic traffic features"
+              : `Synthetic 30-minute traffic demo · minute ${cycleMinute + 1} of ${DEMO_CYCLE_MINUTES}`}
           </small>
           <small>{crossingCount} map records shown as {markerGroupCount} location markers</small>
         </aside>

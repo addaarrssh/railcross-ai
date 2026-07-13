@@ -1,7 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "railcross-ai",
-  "compatibility_date": "2026-07-11",
+  // Must not exceed the newest date supported by the installed workerd binary,
+  // or `npm run dev` fails with ERR_RUNTIME_FAILURE.
+  "compatibility_date": "2026-05-22",
   "main": "./worker/index.ts",
   "assets": {
     "directory": "dist/client",

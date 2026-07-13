@@ -1,204 +1,271 @@
 {
-  "generated_at_utc": "2026-07-11T15:58:06.710578+00:00",
+  "generated_at_utc": "2026-07-13T18:50:57.014105+00:00",
   "dataset": {
     "path": "data/synthetic/crossing_observations.csv",
     "source": "Google-Routes-like synthetic simulator; not Google internal data",
-    "rows": 29900,
-    "events": 650,
-    "positive_rate": 0.1831,
-    "split": "Chronological event split: 70% train, 15% validation, 15% test"
+    "rows": 45080,
+    "events": 980,
+    "crossings": 14,
+    "positive_rate": 0.1801,
+    "split": "Crossing-holdout split: 3 of 14 crossings reserved as an unseen-crossing test set; remaining 11 crossings split chronologically by event 70% train / 15% validation / 15% seen-crossing test",
+    "holdout_crossings": [
+      "RNC-TTS-03",
+      "JAM-KND-08",
+      "LTH-MHU-13"
+    ]
   },
   "classifier": {
     "model": "HistGradientBoostingClassifier",
-    "threshold": 0.67,
+    "threshold": 0.36,
     "test_metrics": {
-      "accuracy": 0.8622,
-      "precision": 0.6465,
-      "recall": 0.6531,
-      "f1": 0.6497,
-      "roc_auc": 0.9064,
-      "pr_auc": 0.7144,
-      "brier_score": 0.119,
-      "false_positive_rate": 0.0869,
+      "accuracy": 0.8666,
+      "precision": 0.6148,
+      "recall": 0.6539,
+      "f1": 0.6337,
+      "roc_auc": 0.9016,
+      "pr_auc": 0.6718,
+      "brier_score": 0.0887,
+      "false_positive_rate": 0.0878,
       "confusion_matrix": [
         [
-          3311,
-          315
+          4008,
+          386
         ],
         [
-          306,
-          576
+          326,
+          616
         ]
       ]
+    },
+    "unseen_crossing_test_metrics": {
+      "accuracy": 0.8634,
+      "precision": 0.5404,
+      "recall": 0.6578,
+      "f1": 0.5933,
+      "roc_auc": 0.8879,
+      "pr_auc": 0.6333,
+      "brier_score": 0.0866,
+      "false_positive_rate": 0.0999,
+      "confusion_matrix": [
+        [
+          7377,
+          819
+        ],
+        [
+          501,
+          963
+        ]
+      ]
+    },
+    "abstention": {
+      "policy": "Probabilities inside unknown_band return UNKNOWN instead of OPEN/CLOSED; band tuned on validation with max 15% abstention",
+      "seen_crossing_test": {
+        "unknown_band": [
+          0.21,
+          0.485
+        ],
+        "coverage": 0.8587,
+        "unknown_rate": 0.1413,
+        "decided_accuracy": 0.9077,
+        "decided_precision": 0.6987,
+        "decided_recall": 0.7435,
+        "decided_f1": 0.7204,
+        "decided_false_positive_rate": 0.0611
+      },
+      "unseen_crossing_test": {
+        "unknown_band": [
+          0.21,
+          0.485
+        ],
+        "coverage": 0.8281,
+        "unknown_rate": 0.1719,
+        "decided_accuracy": 0.9032,
+        "decided_precision": 0.6248,
+        "decided_recall": 0.7418,
+        "decided_f1": 0.6783,
+        "decided_false_positive_rate": 0.071
+      }
     },
     "calibration_bins": [
       {
         "bin": 0,
-        "count": 1862,
-        "mean_predicted_probability": 0.0226,
-        "observed_closure_rate": 0.0059
+        "count": 3055,
+        "mean_predicted_probability": 0.0264,
+        "observed_closure_rate": 0.0245
       },
       {
         "bin": 1,
-        "count": 381,
-        "mean_predicted_probability": 0.1471,
-        "observed_closure_rate": 0.0472
+        "count": 688,
+        "mean_predicted_probability": 0.1436,
+        "observed_closure_rate": 0.1512
       },
       {
         "bin": 2,
-        "count": 352,
-        "mean_predicted_probability": 0.25,
-        "observed_closure_rate": 0.1364
+        "count": 433,
+        "mean_predicted_probability": 0.2463,
+        "observed_closure_rate": 0.2148
       },
       {
         "bin": 3,
-        "count": 316,
-        "mean_predicted_probability": 0.3516,
-        "observed_closure_rate": 0.1392
+        "count": 235,
+        "mean_predicted_probability": 0.3449,
+        "observed_closure_rate": 0.3319
       },
       {
         "bin": 4,
-        "count": 298,
-        "mean_predicted_probability": 0.4489,
-        "observed_closure_rate": 0.1879
+        "count": 169,
+        "mean_predicted_probability": 0.4487,
+        "observed_closure_rate": 0.3491
       },
       {
         "bin": 5,
-        "count": 252,
-        "mean_predicted_probability": 0.5469,
-        "observed_closure_rate": 0.2937
+        "count": 142,
+        "mean_predicted_probability": 0.5503,
+        "observed_closure_rate": 0.5563
       },
       {
         "bin": 6,
-        "count": 211,
-        "mean_predicted_probability": 0.6489,
-        "observed_closure_rate": 0.3744
+        "count": 161,
+        "mean_predicted_probability": 0.6511,
+        "observed_closure_rate": 0.6522
       },
       {
         "bin": 7,
-        "count": 190,
-        "mean_predicted_probability": 0.7538,
-        "observed_closure_rate": 0.4316
+        "count": 225,
+        "mean_predicted_probability": 0.7546,
+        "observed_closure_rate": 0.7244
       },
       {
         "bin": 8,
-        "count": 281,
-        "mean_predicted_probability": 0.855,
-        "observed_closure_rate": 0.5836
+        "count": 182,
+        "mean_predicted_probability": 0.8431,
+        "observed_closure_rate": 0.8022
       },
       {
         "bin": 9,
-        "count": 365,
-        "mean_predicted_probability": 0.9376,
-        "observed_closure_rate": 0.8384
+        "count": 46,
+        "mean_predicted_probability": 0.9278,
+        "observed_closure_rate": 0.8696
       }
     ],
     "scenario_metrics": {
       "construction_zone": {
         "rows": 184,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.2228,
-        "false_positive_rate": 0.2228
+        "predicted_closure_rate": 0.2011,
+        "false_positive_rate": 0.2011
       },
       "market_day": {
-        "rows": 138,
+        "rows": 368,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.2101,
-        "false_positive_rate": 0.2101
+        "predicted_closure_rate": 0.2201,
+        "false_positive_rate": 0.2201
       },
       "ordinary_congestion": {
-        "rows": 506,
+        "rows": 874,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.1146,
-        "false_positive_rate": 0.1146
+        "predicted_closure_rate": 0.1007,
+        "false_positive_rate": 0.1007
       },
       "railway_closure": {
-        "rows": 2484,
-        "actual_closure_rate": 0.3551,
-        "predicted_closure_rate": 0.2504,
-        "false_positive_rate": 0.0287
+        "rows": 2576,
+        "actual_closure_rate": 0.3657,
+        "predicted_closure_rate": 0.2558,
+        "false_positive_rate": 0.0263
       },
       "road_accident": {
-        "rows": 368,
+        "rows": 552,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.1005,
-        "false_positive_rate": 0.1005
+        "predicted_closure_rate": 0.1069,
+        "false_positive_rate": 0.1069
       },
       "school_zone": {
-        "rows": 368,
+        "rows": 276,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.1766,
-        "false_positive_rate": 0.1766
+        "predicted_closure_rate": 0.163,
+        "false_positive_rate": 0.163
       },
       "signal_failure": {
-        "rows": 184,
+        "rows": 368,
         "actual_closure_rate": 0.0,
         "predicted_closure_rate": 0.0707,
         "false_positive_rate": 0.0707
       },
       "weather_flooding": {
-        "rows": 276,
+        "rows": 138,
         "actual_closure_rate": 0.0,
-        "predicted_closure_rate": 0.0942,
-        "false_positive_rate": 0.0942
+        "predicted_closure_rate": 0.0507,
+        "false_positive_rate": 0.0507
       }
     },
     "feature_scope": "The classifier uses only fields available from Google Routes traffic responses and time-history features computed from repeated polls. It does not use device counts, queue estimates, schedules, or crowdsourced reports.",
     "event_detection": {
-      "closure_events": 54,
-      "missed_event_rate": 0.0185,
+      "closure_events": 56,
+      "missed_event_rate": 0.0,
       "median_detection_delay_seconds": 90.0,
       "p90_detection_delay_seconds": 180.0
+    },
+    "unseen_crossing_event_detection": {
+      "closure_events": 91,
+      "missed_event_rate": 0.022,
+      "median_detection_delay_seconds": 90.0,
+      "p90_detection_delay_seconds": 150.0
     },
     "top_permutation_features": [
       [
         "traffic_delay_rolling_10min_seconds",
-        0.25924
+        0.25003
       ],
       [
         "traffic_delay_seconds",
-        0.25243
-      ],
-      [
-        "route_duration_seconds",
-        0.10538
-      ],
-      [
-        "traffic_delay_rolling_3min_seconds",
-        0.07619
+        0.24794
       ],
       [
         "approach_b_speed_code",
-        0.04783
-      ],
-      [
-        "approach_a_speed_code",
-        0.04565
+        0.10335
       ],
       [
         "both_approaches_jammed_minutes",
-        0.04196
+        0.05662
+      ],
+      [
+        "traffic_delay_rolling_3min_seconds",
+        0.05474
+      ],
+      [
+        "route_duration_seconds",
+        0.0391
+      ],
+      [
+        "approach_a_speed_code",
+        0.02975
       ],
       [
         "both_approaches_jammed",
-        0.0396
+        0.01247
       ]
     ]
   },
   "baseline_rule": {
-    "accuracy": 0.7611,
-    "precision": 0.2748,
-    "recall": 0.1349,
-    "f1": 0.181,
-    "false_positive_rate": 0.0866
+    "accuracy": 0.7605,
+    "precision": 0.2143,
+    "recall": 0.1338,
+    "f1": 0.1647,
+    "false_positive_rate": 0.1051
   },
   "reopening_regressor": {
     "model": "HistGradientBoostingClassifier_Survival",
     "test_metrics": {
-      "mae_minutes": 1.777,
-      "median_absolute_error_minutes": 1.628,
-      "within_2_minutes": 0.5918,
-      "calibration_error_180s": 0.0009
+      "mae_minutes": 1.637,
+      "median_absolute_error_minutes": 1.393,
+      "within_2_minutes": 0.6507,
+      "calibration_error_180s": 0.0029
+    },
+    "unseen_crossing_test_metrics": {
+      "mae_minutes": 1.704,
+      "median_absolute_error_minutes": 1.522,
+      "within_2_minutes": 0.6298,
+      "calibration_error_180s": 0.0311
     }
   },
   "resume_claim_status": "Synthetic benchmark only. Real-world accuracy must be measured on independently labelled crossing events before external accuracy claims."

@@ -9,7 +9,7 @@ type DemoCrossingStat = {
   osmNodeId: number;
   avgClosuresPerDay: number;
   avgDurationMinutes: number;
-  status: "OPEN" | "CLOSED";
+  status: "OPEN" | "CLOSED" | "UNKNOWN";
   peakHour: number;
 };
 
@@ -29,7 +29,7 @@ export default function HistoricalDashboard() {
         const crossings = data.crossings || [];
 
         // Build stats
-        const compiledStats: DemoCrossingStat[] = crossings.map((c: { id: string; district: string; osm_node_id: number; prediction: { predicted_status: "OPEN" | "CLOSED" } }) => {
+        const compiledStats: DemoCrossingStat[] = crossings.map((c: { id: string; district: string; osm_node_id: number; prediction: { predicted_status: "OPEN" | "CLOSED" | "UNKNOWN" } }) => {
           const hash = c.id.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
           const avgClosures = (hash % 4) + 2;
           const avgDuration = (hash % 8) + 6;
@@ -196,7 +196,7 @@ export default function HistoricalDashboard() {
                     <td>{s.avgClosuresPerDay} closures</td>
                     <td>{s.avgDurationMinutes} mins</td>
                     <td>
-                      <span className={`status-dot ${s.status === "CLOSED" ? "dot-closed" : "dot-open"}`} />
+                      <span className={`status-dot ${s.status === "CLOSED" ? "dot-closed" : s.status === "UNKNOWN" ? "dot-unknown" : "dot-open"}`} />
                       {s.status}
                     </td>
                   </tr>
